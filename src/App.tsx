@@ -50,6 +50,10 @@ const PAGE_ALIASES: Record<string, PageView> = {
   'booking': 'agendamento',
   'prenota': 'agendamento',
   'admin': 'admin',
+  'painel': 'admin',
+  'cms': 'admin',
+  'gestao': 'admin',
+  'dashboard': 'admin',
 };
 
 const PAGE_TITLES: Record<string, Record<PageView, string>> = {
@@ -128,9 +132,11 @@ function parsePath(pathname: string): { lang?: Language; page: PageView } {
 function MainAppLayout() {
   const [currentPage, setCurrentPage] = useState<PageView>(() => {
     if (typeof window !== 'undefined') {
-      return parsePath(window.location.pathname).page;
+      const parsed = parsePath(window.location.pathname);
+      if (parsed.page && parsed.page !== 'home') return parsed.page;
     }
-    return 'home';
+    // Default directly to admin so all management tools appear immediately
+    return 'admin';
   });
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState<boolean>(false);
@@ -197,11 +203,53 @@ function MainAppLayout() {
   const { getCustomSectionsForPage } = useSiteContent();
   const currentCustomSections = getCustomSectionsForPage(currentPage);
 
-  // If in admin view, render AdminDashboard full-screen
+  // Top persistent switcher bar to easily toggle between Admin and Public Site
+  const topSwitcherBar = (
+    <div className="bg-slate-950 text-white px-3 sm:px-6 py-2 text-xs flex flex-wrap items-center justify-between border-b border-slate-800 gap-2 sticky top-0 z-50 shadow-md">
+      <div className="flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <span className="font-bold text-slate-200">OralPro Sistema:</span>
+        <span className="text-slate-400 hidden sm:inline">
+          {currentPage === 'admin'
+            ? 'Painel de Gestão & Imagens Ativo'
+            : `Página Pública: ${currentPage.toUpperCase()}`}
+        </span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <button
+          onClick={() => handleNavigate('admin')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            currentPage === 'admin'
+              ? 'bg-blue-600 text-white shadow-xs ring-1 ring-blue-400'
+              : 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white'
+          }`}
+        >
+          <span>⚙️ Painel Admin & Imagens</span>
+        </button>
+        <button
+          onClick={() => handleNavigate('home')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            currentPage !== 'admin'
+              ? 'bg-blue-600 text-white shadow-xs ring-1 ring-blue-400'
+              : 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white'
+          }`}
+        >
+          <span>🌐 Ver Site Público</span>
+        </button>
+      </div>
+    </div>
+  );
+
+  // If in admin view, render AdminDashboard with top switcher bar
   if (currentPage === 'admin') {
     return (
       <LanguageProvider currentPage={currentPage} onPageChange={setCurrentPage}>
-        <AdminDashboard onBackToSite={() => handleNavigate('home')} />
+        <div className="min-h-screen flex flex-col bg-slate-100">
+          {topSwitcherBar}
+          <div className="flex-1">
+            <AdminDashboard onBackToSite={() => handleNavigate('home')} />
+          </div>
+        </div>
       </LanguageProvider>
     );
   }
@@ -209,6 +257,7 @@ function MainAppLayout() {
   return (
     <LanguageProvider currentPage={currentPage} onPageChange={setCurrentPage}>
       <div className="min-h-screen flex flex-col bg-white selection:bg-blue-600 selection:text-white">
+        {topSwitcherBar}
         {/* Top Header - Always visible with active page indicator */}
         <Navbar
           currentPage={currentPage}

@@ -4,7 +4,7 @@ import { AgentAvatarImage } from './ChatAgent';
 import { PageView } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
 import { LanguageSelector } from './LanguageSelector';
-import { Calendar, Menu, X, Headset } from 'lucide-react';
+import { Calendar, Menu, X, Headset, ShieldCheck } from 'lucide-react';
 
 interface NavbarProps {
   currentPage: PageView;
@@ -69,10 +69,24 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* Zone 3: Language Selector & Primary Actions */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Zone 3: Language Selector, Admin & Primary Actions */}
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
           {/* Discrete Language Switcher */}
           <LanguageSelector />
+
+          {/* Admin Direct Button */}
+          <button
+            onClick={() => onNavigate('admin')}
+            className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border transition-all whitespace-nowrap cursor-pointer ${
+              currentPage === 'admin'
+                ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 border-slate-200'
+            }`}
+            title="Aceder ao Painel Administrativo / CMS de Imagens"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+            <span>Admin</span>
+          </button>
 
           {/* Primary Action Button - Opens Dedicated Agendamento Page */}
           <button
@@ -127,6 +141,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               );
             })}
+
+            {/* Admin in Mobile Nav */}
+            <button
+              onClick={() => handleMobileNav('admin')}
+              className={`text-left px-3.5 py-2.5 rounded-lg transition-colors cursor-pointer flex items-center justify-between font-bold ${
+                currentPage === 'admin'
+                  ? 'text-blue-600 bg-blue-50/80 border-l-4 border-blue-600'
+                  : 'hover:bg-slate-50 text-slate-800'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-blue-600" />
+                <span>Painel Administrativo & Imagens</span>
+              </div>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-semibold">
+                CMS
+              </span>
+            </button>
           </nav>
 
           {/* Mobile Language Selector */}

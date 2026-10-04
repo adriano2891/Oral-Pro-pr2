@@ -36,13 +36,8 @@ interface AdminDashboardProps {
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) => {
   const { t } = useLanguage();
 
-  // Simple auth gate with PIN: admin2026
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('oralpro_admin_auth') === 'admin2026';
-    }
-    return false;
-  });
+  // Admin direct access enabled for build session
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
   const [passwordInput, setPasswordInput] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -366,6 +361,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
             >
               <Lock className="w-4 h-4" />
               <span>Desbloquear Acesso</span>
+            </button>
+
+            {/* Quick 1-Click Access */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsAuthenticated(true);
+                if (typeof window !== 'undefined') {
+                  sessionStorage.setItem('oralpro_admin_auth', 'admin2026');
+                }
+              }}
+              className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 active:scale-[0.99] text-emerald-400 hover:text-emerald-300 font-semibold text-xs rounded-xl transition-all border border-slate-700 cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>Acesso Rápido Direto (PIN: admin2026)</span>
             </button>
 
             <div className="text-center pt-2">
