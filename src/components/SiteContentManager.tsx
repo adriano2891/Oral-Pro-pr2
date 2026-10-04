@@ -85,7 +85,17 @@ async function compressImageFile(file: File): Promise<{ dataUrl: string; sizeKb:
   });
 }
 
-export const SiteContentManager: React.FC = () => {
+export interface SiteContentManagerProps {
+  initialSubTab?: 'campos' | 'seccoes' | 'biblioteca';
+  initialPageFilter?: string;
+  onNavigateToPreview?: () => void;
+}
+
+export const SiteContentManager: React.FC<SiteContentManagerProps> = ({
+  initialSubTab = 'campos',
+  initialPageFilter = 'todos',
+  onNavigateToPreview,
+}) => {
   const {
     slots,
     customSections,
@@ -104,13 +114,21 @@ export const SiteContentManager: React.FC = () => {
   } = useSiteContent();
 
   // Sub-navigation tabs
-  const [activeSubTab, setActiveSubTab] = useState<'campos' | 'seccoes' | 'biblioteca'>('campos');
+  const [activeSubTab, setActiveSubTab] = useState<'campos' | 'seccoes' | 'biblioteca'>(initialSubTab);
 
   // Filters
-  const [selectedPageFilter, setSelectedPageFilter] = useState<string>('todos');
+  const [selectedPageFilter, setSelectedPageFilter] = useState<string>(initialPageFilter);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('todos');
   const [selectedSectionFilter, setSelectedSectionFilter] = useState<string>('todos');
+
+  useEffect(() => {
+    if (initialSubTab) setActiveSubTab(initialSubTab);
+  }, [initialSubTab]);
+
+  useEffect(() => {
+    if (initialPageFilter) setSelectedPageFilter(initialPageFilter);
+  }, [initialPageFilter]);
 
   // Modals
   const [selectedSlotForImage, setSelectedSlotForImage] = useState<SiteContentSlot | null>(null);

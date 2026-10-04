@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { SiteContentSlot, CustomSection, MediaLibraryItem } from '../types';
+import { SiteContentSlot, CustomSection, MediaLibraryItem, AuditLogEntry } from '../types';
 
 interface SiteContentContextType {
   slots: SiteContentSlot[];
   customSections: CustomSection[];
   mediaLibrary: MediaLibraryItem[];
+  auditLogs: AuditLogEntry[];
   lastPublished: string;
   hasUnpublished: boolean;
   isLoading: boolean;
@@ -40,10 +41,22 @@ interface SiteContentContextType {
 
 const SiteContentContext = createContext<SiteContentContextType | undefined>(undefined);
 
+function getAuthHeaders(): HeadersInit {
+  const token =
+    (typeof window !== 'undefined' &&
+      (localStorage.getItem('oralpro_admin_token') || sessionStorage.getItem('oralpro_admin_token'))) ||
+    '';
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [slots, setSlots] = useState<SiteContentSlot[]>([]);
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
   const [mediaLibrary, setMediaLibrary] = useState<MediaLibraryItem[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
   const [lastPublished, setLastPublished] = useState<string>('');
   const [hasUnpublished, setHasUnpublished] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -51,16 +64,20 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const refreshContent = useCallback(async () => {
     try {
       const res = await fetch('/api/site-content');
-      const data = await res.json();
-      if (data.success && data.data) {
+      if (!res.ok) return;
+      const text = await res.text();
+      if (!text || text.trim().startsWith('<')) return;
+      const data = JSON.parse(text);
+      if (data && data.success && data.data) {
         setSlots(data.data.slots || []);
         setCustomSections(data.data.customSections || []);
         setMediaLibrary(data.data.mediaLibrary || []);
+        setAuditLogs(data.data.auditLogs || []);
         setLastPublished(data.data.lastPublished || '');
         setHasUnpublished(Boolean(data.data.hasUnpublished));
       }
-    } catch (err) {
-      console.error('Failed to load site content:', err);
+    } catch {
+      // Graceful fallback to existing in-memory state
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +123,7 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       const res = await fetch('/api/site-content/slot', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ key, updates }),
       });
       const json = await res.json();
@@ -122,7 +139,10 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const saveDrafts = async (): Promise<boolean> => {
     try {
-      const res = await fetch('/api/site-content/save-drafts', { method: 'POST' });
+      const res = await fetch('/api/site-content/save-drafts', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+      });
       const json = await res.json();
       if (json.success) {
         await refreshContent();
@@ -136,7 +156,10 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const publishChanges = async (): Promise<boolean> => {
     try {
-      const res = await fetch('/api/site-content/publish', { method: 'POST' });
+      const res = await fetch('/api/site-content/publish', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+      });
       const json = await res.json();
       if (json.success) {
         await refreshContent();
@@ -150,7 +173,10 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const revertDrafts = async (): Promise<boolean> => {
     try {
-      const res = await fetch('/api/site-content/revert', { method: 'POST' });
+      const res = await fetch('/api/site-content/revert', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+      });
       const json = await res.json();
       if (json.success) {
         await refreshContent();
@@ -168,7 +194,7 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       const res = await fetch('/api/site-content/custom-section', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify(data),
       });
       const json = await res.json();
@@ -184,7 +210,10 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const deleteCustomSection = async (id: string): Promise<boolean> => {
     try {
-      const res = await fetch(`/api/site-content/custom-section/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/site-content/custom-section/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
       const json = await res.json();
       if (json.success) {
         await refreshContent();
@@ -203,11 +232,11 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     aspectRatio?: string;
     size?: string;
     origin?: string;
-  }): Promise<boolean> => {
+  }) => {
     try {
       const res = await fetch('/api/site-content/media-library', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify(data),
       });
       const json = await res.json();
@@ -223,7 +252,10 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const deleteMedia = async (id: string): Promise<boolean> => {
     try {
-      const res = await fetch(`/api/site-content/media-library/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/site-content/media-library/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
       const json = await res.json();
       if (json.success) {
         await refreshContent();
@@ -241,6 +273,7 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         slots,
         customSections,
         mediaLibrary,
+        auditLogs,
         lastPublished,
         hasUnpublished,
         isLoading,

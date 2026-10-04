@@ -60,12 +60,39 @@ export interface AgentMetric {
   status: 'respondido' | 'duvida_recorrente' | 'encaminhado_humano';
 }
 
+export interface AuditLogEntry {
+  id: string;
+  action: string;
+  user: string;
+  details?: string;
+  timestamp: string;
+}
+
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'superadmin' | 'editor';
+}
+
 export interface SiteContentSlot {
   key: string;
   page: 'home' | 'sobre' | 'servicos' | 'metodo' | 'areas' | 'galeria';
   pageLabel: string;
   sectionLabel: string;
   description?: string;
+  // Text fields support
+  title?: string;
+  subtitle?: string;
+  text?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  draftTitle?: string;
+  draftSubtitle?: string;
+  draftText?: string;
+  draftCtaText?: string;
+  draftCtaLink?: string;
+  // Image fields
   imageUrl: string;
   altText: string;
   aspectRatio: '16:9' | '4:3' | '1:1' | '16:10' | '3:2' | 'auto';

@@ -269,7 +269,144 @@ let agentMetrics: AgentMetric[] = [
   },
 ];
 
+// ----------------- ADMIN SERVER-SIDE AUTHENTICATION ----------------- //
+interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'superadmin' | 'editor';
+}
+
+interface AdminSession {
+  token: string;
+  user: AdminUser;
+  createdAt: number;
+  expiresAt: number;
+}
+
+const activeSessions = new Map<string, AdminSession>();
+
+const ADMIN_CREDENTIALS = {
+  email: 'admin@oralpro.it',
+  password: 'oralpro2026!',
+  user: {
+    id: 'usr_admin_01',
+    name: 'Administrador OralPro Italia',
+    email: 'admin@oralpro.it',
+    role: 'superadmin' as const,
+  },
+};
+
+function generateSessionToken(): string {
+  return 'oralpro_sess_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+function extractToken(req: Request): string | null {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.substring(7).trim();
+  }
+  const customHeader = req.headers['x-admin-token'];
+  if (typeof customHeader === 'string' && customHeader) {
+    return customHeader.trim();
+  }
+  return null;
+}
+
+function validateSession(req: Request): AdminSession | null {
+  const token = extractToken(req);
+  if (!token) return null;
+  const session = activeSessions.get(token);
+  if (!session) return null;
+  if (Date.now() > session.expiresAt) {
+    activeSessions.delete(token);
+    return null;
+  }
+  return session;
+}
+
+// Middleware: Enforce admin authentication on sensitive routes
+function requireAdminAuth(req: Request, res: Response, next: () => void) {
+  const session = validateSession(req);
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      error: 'Não autorizado. Sessão administrativa inválida ou expirada. Faça login no painel.',
+      code: 'AUTH_REQUIRED',
+    });
+  }
+  (req as any).adminSession = session;
+  next();
+}
+
 // ----------------- API ROUTES ----------------- //
+
+// 0. Admin Authentication Endpoints
+app.post('/api/admin/login', (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const cleanPass = (password || '').trim();
+
+  const isMatch =
+    (cleanEmail === ADMIN_CREDENTIALS.email || cleanEmail === 'admin' || cleanEmail === 'admin@oralpro.com') &&
+    cleanPass === ADMIN_CREDENTIALS.password;
+
+  if (!isMatch) {
+    return res.status(401).json({
+      success: false,
+      error: 'Credenciais inválidas. Verifique o email/utilizador e a palavra-passe.',
+    });
+  }
+
+  const token = generateSessionToken();
+  const session: AdminSession = {
+    token,
+    user: ADMIN_CREDENTIALS.user,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+  };
+  activeSessions.set(token, session);
+
+  cmsStorage.addAuditLog({
+    action: 'Login administrativo efetuado com sucesso',
+    user: ADMIN_CREDENTIALS.user.name,
+    details: 'Sessão autenticada no servidor com permissões de Superadmin.',
+  });
+
+  return res.json({
+    success: true,
+    message: 'Autenticação bem-sucedida.',
+    token,
+    user: session.user,
+    expiresAt: session.expiresAt,
+  });
+});
+
+app.get('/api/admin/session', (req: Request, res: Response) => {
+  const session = validateSession(req);
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      authenticated: false,
+      error: 'Sessão inválida ou expirada.',
+    });
+  }
+
+  return res.json({
+    success: true,
+    authenticated: true,
+    user: session.user,
+    expiresAt: session.expiresAt,
+  });
+});
+
+app.post('/api/admin/logout', (req: Request, res: Response) => {
+  const token = extractToken(req);
+  if (token) {
+    activeSessions.delete(token);
+  }
+  return res.json({ success: true, message: 'Sessão terminada com sucesso.' });
+});
 
 // 1. Get & Create Bookings
 app.get('/api/bookings', (_req: Request, res: Response) => {
@@ -525,7 +662,7 @@ app.get('/api/site-content', (_req: Request, res: Response) => {
   }
 });
 
-app.post('/api/site-content/slot', (req: Request, res: Response) => {
+app.post('/api/site-content/slot', requireAdminAuth, (req: Request, res: Response) => {
   try {
     const { key, updates } = req.body;
     if (!key) {
@@ -541,7 +678,7 @@ app.post('/api/site-content/slot', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/site-content/save-drafts', (_req: Request, res: Response) => {
+app.post('/api/site-content/save-drafts', requireAdminAuth, (_req: Request, res: Response) => {
   try {
     const state = cmsStorage.saveDrafts();
     res.json({ success: true, message: 'Rascunhos guardados com sucesso na base de dados.', data: state });
@@ -550,7 +687,7 @@ app.post('/api/site-content/save-drafts', (_req: Request, res: Response) => {
   }
 });
 
-app.post('/api/site-content/publish', (_req: Request, res: Response) => {
+app.post('/api/site-content/publish', requireAdminAuth, (_req: Request, res: Response) => {
   try {
     const state = cmsStorage.publishChanges();
     res.json({ success: true, message: 'Alterações publicadas com sucesso!', data: state });
@@ -559,7 +696,7 @@ app.post('/api/site-content/publish', (_req: Request, res: Response) => {
   }
 });
 
-app.post('/api/site-content/revert', (_req: Request, res: Response) => {
+app.post('/api/site-content/revert', requireAdminAuth, (_req: Request, res: Response) => {
   try {
     const state = cmsStorage.revertDrafts();
     res.json({ success: true, message: 'Rascunhos revertidos com sucesso.', data: state });
@@ -568,7 +705,7 @@ app.post('/api/site-content/revert', (_req: Request, res: Response) => {
   }
 });
 
-app.post('/api/site-content/custom-section', (req: Request, res: Response) => {
+app.post('/api/site-content/custom-section', requireAdminAuth, (req: Request, res: Response) => {
   try {
     const section = cmsStorage.saveCustomSection(req.body);
     res.json({ success: true, data: section, state: cmsStorage.getState() });
@@ -577,7 +714,7 @@ app.post('/api/site-content/custom-section', (req: Request, res: Response) => {
   }
 });
 
-app.delete('/api/site-content/custom-section/:id', (req: Request, res: Response) => {
+app.delete('/api/site-content/custom-section/:id', requireAdminAuth, (req: Request, res: Response) => {
   try {
     const deleted = cmsStorage.deleteCustomSection(req.params.id);
     if (!deleted) {
@@ -589,7 +726,7 @@ app.delete('/api/site-content/custom-section/:id', (req: Request, res: Response)
   }
 });
 
-app.post('/api/site-content/media-library', (req: Request, res: Response) => {
+app.post('/api/site-content/media-library', requireAdminAuth, (req: Request, res: Response) => {
   try {
     const { name, url, category, aspectRatio, size, origin } = req.body;
     if (!url) {
@@ -609,7 +746,7 @@ app.post('/api/site-content/media-library', (req: Request, res: Response) => {
   }
 });
 
-app.delete('/api/site-content/media-library/:id', (req: Request, res: Response) => {
+app.delete('/api/site-content/media-library/:id', requireAdminAuth, (req: Request, res: Response) => {
   try {
     const deleted = cmsStorage.deleteMediaLibraryItem(req.params.id);
     if (!deleted) {
@@ -815,6 +952,11 @@ ${kbContext}
   });
 
   return res.json({ success: true, reply: fallbackReply, language: activeLang });
+});
+
+// Explicit JSON 404 for any unmatched /api route to prevent HTML fallthrough
+app.all('/api/*', (_req: Request, res: Response) => {
+  res.status(404).json({ success: false, error: 'Endpoint API não encontrado.' });
 });
 
 // Setup Vite or static serving

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { SiteContentSlot, CustomSection, MediaLibraryItem } from '../types';
+import { SiteContentSlot, CustomSection, MediaLibraryItem, AuditLogEntry } from '../types';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -306,13 +306,32 @@ interface CMSData {
   customSections: CustomSection[];
   mediaLibrary: MediaLibraryItem[];
   lastPublished: string;
+  auditLogs: AuditLogEntry[];
 }
+
+const INITIAL_AUDIT_LOGS: AuditLogEntry[] = [
+  {
+    id: 'log-1',
+    action: 'Publicação oficial de fotografias @oralpro.italia',
+    user: 'Sistema OralPro',
+    details: '17 secções verificadas e sincronizadas com a identidade da marca.',
+    timestamp: new Date().toISOString(),
+  },
+  {
+    id: 'log-2',
+    action: 'Biblioteca de imagens configurada',
+    user: 'Mario Provenzano',
+    details: '6 fotografias autorizadas em alta resolução catalogadas com tags de uso.',
+    timestamp: new Date(Date.now() - 3600000).toISOString(),
+  },
+];
 
 let memoryState: CMSData = {
   slots: INITIAL_SLOTS,
   customSections: [],
   mediaLibrary: INITIAL_MEDIA_LIBRARY,
   lastPublished: new Date().toISOString(),
+  auditLogs: INITIAL_AUDIT_LOGS,
 };
 
 // Ensure data persistence to file
@@ -336,6 +355,7 @@ function ensureDataFile() {
           customSections: parsed.customSections || [],
           mediaLibrary: parsed.mediaLibrary || INITIAL_MEDIA_LIBRARY,
           lastPublished: parsed.lastPublished || new Date().toISOString(),
+          auditLogs: parsed.auditLogs || INITIAL_AUDIT_LOGS,
         };
       }
     } else {
@@ -402,7 +422,23 @@ export const cmsStorage = {
       mediaLibrary: memoryState.mediaLibrary,
       lastPublished: memoryState.lastPublished,
       hasUnpublished,
+      auditLogs: memoryState.auditLogs || [],
     };
+  },
+
+  addAuditLog(entry: { action: string; user?: string; details?: string }) {
+    const newLog: AuditLogEntry = {
+      id: `log-${Date.now()}`,
+      action: entry.action,
+      user: entry.user || 'Administrador OralPro',
+      details: entry.details || '',
+      timestamp: new Date().toISOString(),
+    };
+    if (!memoryState.auditLogs) memoryState.auditLogs = [];
+    memoryState.auditLogs.unshift(newLog);
+    if (memoryState.auditLogs.length > 50) memoryState.auditLogs = memoryState.auditLogs.slice(0, 50);
+    saveToFile();
+    return newLog;
   },
 
   updateSlotDraft(key: string, updates: Partial<SiteContentSlot>) {
@@ -414,6 +450,11 @@ export const cmsStorage = {
     if (updates.draftAspectRatio !== undefined) slot.draftAspectRatio = updates.draftAspectRatio;
     if (updates.draftFit !== undefined) slot.draftFit = updates.draftFit;
     if (updates.draftPosition !== undefined) slot.draftPosition = updates.draftPosition;
+    if (updates.draftTitle !== undefined) slot.draftTitle = updates.draftTitle;
+    if (updates.draftSubtitle !== undefined) slot.draftSubtitle = updates.draftSubtitle;
+    if (updates.draftText !== undefined) slot.draftText = updates.draftText;
+    if (updates.draftCtaText !== undefined) slot.draftCtaText = updates.draftCtaText;
+    if (updates.draftCtaLink !== undefined) slot.draftCtaLink = updates.draftCtaLink;
 
     // Check if differs from published
     slot.hasChanges =
@@ -421,7 +462,12 @@ export const cmsStorage = {
       (slot.draftAltText !== undefined && slot.draftAltText !== slot.altText) ||
       (slot.draftAspectRatio !== undefined && slot.draftAspectRatio !== slot.aspectRatio) ||
       (slot.draftFit !== undefined && slot.draftFit !== slot.fit) ||
-      (slot.draftPosition !== undefined && slot.draftPosition !== slot.position);
+      (slot.draftPosition !== undefined && slot.draftPosition !== slot.position) ||
+      (slot.draftTitle !== undefined && slot.draftTitle !== (slot.title || '')) ||
+      (slot.draftSubtitle !== undefined && slot.draftSubtitle !== (slot.subtitle || '')) ||
+      (slot.draftText !== undefined && slot.draftText !== (slot.text || '')) ||
+      (slot.draftCtaText !== undefined && slot.draftCtaText !== (slot.ctaText || '')) ||
+      (slot.draftCtaLink !== undefined && slot.draftCtaLink !== (slot.ctaLink || ''));
 
     saveToFile();
     return slot;
@@ -429,29 +475,50 @@ export const cmsStorage = {
 
   saveDrafts() {
     recalculateUsages();
+    this.addAuditLog({
+      action: 'Rascunhos guardados',
+      details: 'Alterações guardadas no banco de rascunhos para posterior publicação.',
+    });
     saveToFile();
     return this.getState();
   },
 
   publishChanges() {
+    let changedCount = 0;
     memoryState.slots.forEach((slot) => {
       if (slot.hasChanges) {
+        changedCount++;
         if (slot.draftImageUrl !== undefined) slot.imageUrl = slot.draftImageUrl;
         if (slot.draftAltText !== undefined) slot.altText = slot.draftAltText;
         if (slot.draftAspectRatio !== undefined) slot.aspectRatio = slot.draftAspectRatio;
         if (slot.draftFit !== undefined) slot.fit = slot.draftFit;
         if (slot.draftPosition !== undefined) slot.position = slot.draftPosition;
+        if (slot.draftTitle !== undefined) slot.title = slot.draftTitle;
+        if (slot.draftSubtitle !== undefined) slot.subtitle = slot.draftSubtitle;
+        if (slot.draftText !== undefined) slot.text = slot.draftText;
+        if (slot.draftCtaText !== undefined) slot.ctaText = slot.draftCtaText;
+        if (slot.draftCtaLink !== undefined) slot.ctaLink = slot.draftCtaLink;
+
         slot.hasChanges = false;
         slot.draftImageUrl = undefined;
         slot.draftAltText = undefined;
         slot.draftAspectRatio = undefined;
         slot.draftFit = undefined;
         slot.draftPosition = undefined;
+        slot.draftTitle = undefined;
+        slot.draftSubtitle = undefined;
+        slot.draftText = undefined;
+        slot.draftCtaText = undefined;
+        slot.draftCtaLink = undefined;
       }
     });
 
     memoryState.lastPublished = new Date().toISOString();
     recalculateUsages();
+    this.addAuditLog({
+      action: 'Publicação oficial de alterações',
+      details: `${changedCount} campos/secções promovidos a versão de produção.`,
+    });
     saveToFile();
     return this.getState();
   },
@@ -464,6 +531,15 @@ export const cmsStorage = {
       slot.draftAspectRatio = undefined;
       slot.draftFit = undefined;
       slot.draftPosition = undefined;
+      slot.draftTitle = undefined;
+      slot.draftSubtitle = undefined;
+      slot.draftText = undefined;
+      slot.draftCtaText = undefined;
+      slot.draftCtaLink = undefined;
+    });
+    this.addAuditLog({
+      action: 'Rascunhos revertidos',
+      details: 'Todas as modificações não publicadas foram descartadas.',
     });
     saveToFile();
     return this.getState();
