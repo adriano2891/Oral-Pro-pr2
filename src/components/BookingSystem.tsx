@@ -184,8 +184,9 @@ END:VCALENDAR`;
       </div>
 
       {/* Wizard Step Indicator */}
-      <div className="border-b border-slate-100 bg-slate-50/60 px-6 py-3">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
+      <div className="border-b border-slate-100 bg-slate-50/60 px-4 sm:px-6 py-3">
+        {/* Desktop / Tablet: Full Labels */}
+        <div className="hidden sm:flex items-center justify-between text-xs font-semibold text-slate-600">
           <span className={step >= 1 ? 'text-blue-600 font-bold' : ''}>{t.booking.stepLabel1}</span>
           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
           <span className={step >= 2 ? 'text-blue-600 font-bold' : ''}>{t.booking.stepLabel2}</span>
@@ -193,6 +194,24 @@ END:VCALENDAR`;
           <span className={step >= 3 ? 'text-blue-600 font-bold' : ''}>{t.booking.stepLabel3}</span>
           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
           <span className={step >= 4 ? 'text-emerald-600 font-bold' : ''}>{t.booking.stepLabel4}</span>
+        </div>
+
+        {/* Mobile: Compact Progress Bar + Step Title */}
+        <div className="sm:hidden flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2 font-bold text-blue-600">
+            <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] shrink-0">
+              {step}
+            </span>
+            <span className="truncate">
+              {step === 1 && '1. Tipo de Consulta'}
+              {step === 2 && '2. Data & Horário'}
+              {step === 3 && '3. Seus Dados'}
+              {step === 4 && '4. Confirmação'}
+            </span>
+          </div>
+          <span className="text-[11px] font-semibold text-slate-400 shrink-0">
+            Etapa {step}/4
+          </span>
         </div>
       </div>
 
@@ -599,8 +618,8 @@ END:VCALENDAR`;
 
   if (isOpenModal) {
     return (
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-        <div className="relative w-full max-w-4xl my-8">
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
+        <div className="relative w-full max-w-4xl my-2 sm:my-8 max-h-[96vh] overflow-y-auto rounded-2xl">
           {content}
         </div>
       </div>

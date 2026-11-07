@@ -58,9 +58,9 @@ export const CTASection: React.FC<CTASectionProps> = ({ onOpenBooking }) => {
           </button>
         </div>
 
-        <div className="pt-4 text-xs text-slate-400 flex items-center justify-center gap-4">
+        <div className="pt-4 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4">
           <span>WhatsApp oficial: +55 (11) 93473-9629</span>
-          <span>•</span>
+          <span className="hidden sm:inline">•</span>
           <span>Atendimento em horário comercial</span>
         </div>
       </div>

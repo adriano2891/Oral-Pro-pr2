@@ -130,7 +130,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           role="dialog"
           aria-modal="true"
         >
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 text-left space-y-4 animate-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 text-left space-y-4 animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex items-start justify-between pb-3 border-b border-slate-100">
               <div>

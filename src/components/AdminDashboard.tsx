@@ -546,16 +546,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
 
             <button
               onClick={onBackToSite}
-              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1.5 shrink-0"
               title="Abrir o site público"
             >
-              <span>Ver Site Público</span>
+              <span className="hidden sm:inline">Ver Site Público</span>
+              <span className="inline sm:hidden">Site</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
 
             <button
               onClick={handleLogout}
-              className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-900 rounded-lg transition-colors cursor-pointer"
+              className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-900 rounded-lg transition-colors cursor-pointer shrink-0"
               title="Terminar sessão administrativa"
             >
               <LogOut className="w-4 h-4" />
@@ -564,6 +565,35 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
         </div>
 
         {/* ----------------- PRIMARY ADMIN TABS NAVIGATION ----------------- */}
+        {/* Mobile quick tab select dropdown */}
+        <div className="sm:hidden bg-slate-900 border-t border-slate-800 px-4 py-2 flex items-center gap-2">
+          <label htmlFor="admin-mobile-tab-select" className="text-[11px] font-semibold text-slate-400 shrink-0">
+            Navegar:
+          </label>
+          <select
+            id="admin-mobile-tab-select"
+            value={activeTab}
+            onChange={(e) => {
+              const val = e.target.value as AdminMainTab;
+              setActiveTab(val);
+              if (val === 'conteudos') {
+                setTargetPageFilterForContent('todos');
+              }
+            }}
+            className="w-full bg-slate-800 text-white text-xs font-bold rounded-lg px-2.5 py-1.5 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="visao_geral">Visão Geral</option>
+            <option value="paginas">Páginas do Site (6)</option>
+            <option value="conteudos">Conteúdos e Imagens ({slots.length})</option>
+            <option value="biblioteca">Biblioteca de Imagens ({mediaLibrary.length})</option>
+            <option value="publicacao">Pré-visualização e Publicação {hasUnpublished ? '(!)' : ''}</option>
+            <option value="agendamentos">Agendamentos ({bookings.length})</option>
+            <option value="leads">Leads ({leads.length})</option>
+            <option value="atendimento_ia">Atendimento IA</option>
+          </select>
+        </div>
+
+        {/* Horizontal Tab Bar (with smooth scroll and touch-friendly targets) */}
         <div className="bg-slate-900/90 border-t border-slate-800/80 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 no-scrollbar">
             <button
@@ -1350,7 +1380,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
 
               {/* Bookings Table */}
               <div className="mt-6 overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left text-xs min-w-[680px]">
                   <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] tracking-wider border-y border-slate-200">
                     <tr>
                       <th className="py-3 px-4">Paciente & Contato</th>
@@ -1434,7 +1464,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
               </p>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left text-xs min-w-[680px]">
                   <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] tracking-wider border-y border-slate-200">
                     <tr>
                       <th className="py-3 px-4">Nome & Clínica</th>
@@ -1553,7 +1583,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
       {/* ----------------- MODAL: EDIT BOOKING ----------------- */}
       {selectedBooking && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-scaleUp">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-scaleUp max-h-[92vh] overflow-y-auto">
             <h3 className="text-lg font-bold text-slate-900 mb-1">
               Gerir Agendamento &bull; {selectedBooking.clinicName}
             </h3>
@@ -1630,7 +1660,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
       {/* ----------------- MODAL: ADD KNOWLEDGE ----------------- */}
       {showAddKbModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-scaleUp">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-scaleUp max-h-[92vh] overflow-y-auto">
             <h3 className="text-lg font-bold text-slate-900 mb-1">Novo Artigo de Conhecimento</h3>
             <p className="text-xs text-slate-500 mb-4">
               Adicione respostas oficiais para o assistente de IA.

@@ -128,7 +128,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenBooking, onOpe
           role="dialog"
           aria-modal="true"
         >
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 text-left space-y-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 text-left space-y-4 max-h-[92vh] overflow-y-auto">
             <div className="flex items-start justify-between pb-3 border-b border-slate-100">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">

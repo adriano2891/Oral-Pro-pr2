@@ -111,7 +111,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         className="flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 xl:py-2 bg-slate-100/90 hover:bg-slate-200/80 active:bg-slate-200 text-slate-800 rounded-xl text-xs xl:text-sm font-semibold transition-all border border-slate-200/80 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 shadow-2xs whitespace-nowrap shrink-0"
       >
         <Globe className="w-3.5 h-3.5 text-slate-600 shrink-0" />
-        <span className="text-slate-800">{currentLang.name}</span>
+        <span className="text-slate-800 hidden 2xl:inline">{currentLang.code === 'pt' ? 'Português' : currentLang.name}</span>
+        <span className="text-slate-800 2xl:hidden">{currentLang.code.toUpperCase()}</span>
         <ChevronDown
           className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${
             dropdownOpen ? 'rotate-180' : ''

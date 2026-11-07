@@ -58,25 +58,26 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems: { page: PageView; label: string }[] = [
     { page: 'home', label: t.nav.home || 'Início' },
-    { page: 'sobre', label: t.nav.about || 'Sobre a clínica' },
-    { page: 'servicos', label: t.nav.services || 'Tratamentos' },
-    { page: 'metodo', label: t.nav.method || 'Diferenciais' },
-    { page: 'duvidas', label: t.nav.faq || 'Perguntas frequentes' },
+    { page: 'servicos', label: t.nav.services || 'Serviços' },
+    { page: 'metodo', label: t.nav.method || 'Método' },
+    { page: 'areas', label: t.nav.areas || 'Áreas' },
+    { page: 'sobre', label: t.nav.about || 'Sobre' },
+    { page: 'duvidas', label: t.nav.faq || 'Dúvidas' },
     { page: 'contactos', label: t.nav.contact || 'Contactos' },
   ];
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-colors w-full">
-      <div className="w-full max-w-[1720px] mx-auto px-2 sm:px-4 lg:px-4 xl:px-6 2xl:px-8 h-20 flex items-center justify-between gap-1.5 sm:gap-2 lg:gap-2.5 xl:gap-5">
+      <div className="w-full max-w-[1720px] mx-auto px-2 sm:px-4 lg:px-3 xl:px-6 2xl:px-8 h-20 flex items-center justify-between gap-1.5 sm:gap-2 lg:gap-2 xl:gap-3 2xl:gap-5">
         {/* ========================================================= */}
         {/* AREA 1: LOGÓTIPO À ESQUERDA */}
         {/* ========================================================= */}
-        <div className="flex items-center shrink-0">
+        <div className="flex items-center shrink-0 min-w-0">
           <button
             type="button"
             onClick={() => handleNavClick('home')}
             className="group text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-xl p-0.5 transition-opacity hover:opacity-90 cursor-pointer flex items-center shrink-0"
-            aria-label="OralPro Italia - Página Inicial"
+            aria-label="OralPro - Página Inicial"
           >
             <OralProLogo size="header" />
           </button>
@@ -86,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* AREA 2: NAVEGAÇÃO PRINCIPAL AO CENTRO (DESKTOP) */}
         {/* ========================================================= */}
         <nav
-          className="hidden lg:flex items-center justify-center gap-0.5 sm:gap-1 xl:gap-2.5 2xl:gap-5 text-xs xl:text-sm font-medium shrink-0 min-w-0"
+          className="hidden lg:flex items-center justify-center gap-1 xl:gap-1.5 2xl:gap-3.5 text-xs xl:text-[13px] 2xl:text-sm font-semibold shrink-0 min-w-0"
           aria-label="Navegação Principal"
         >
           {navItems.map((item) => {
@@ -96,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={item.page}
                 type="button"
                 onClick={() => handleNavClick(item.page)}
-                className={`relative py-1.5 px-1 xl:px-2 transition-colors cursor-pointer text-xs xl:text-sm whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-lg ${
+                className={`relative py-1.5 px-1.5 xl:px-2 transition-colors cursor-pointer text-xs xl:text-[13px] 2xl:text-sm whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-lg ${
                   isActive
                     ? 'text-blue-600 font-bold'
                     : 'text-slate-600 hover:text-blue-600 font-medium'
@@ -106,7 +107,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {isActive && (
                   <span
                     aria-hidden="true"
-                    className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 rounded-full"
+                    className="absolute -bottom-0.5 left-1 right-1 h-0.5 bg-blue-600 rounded-full"
                   />
                 )}
               </button>
@@ -135,7 +136,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
             </span>
             <ShieldCheck className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-            <span className="hidden sm:inline">Botão Admin provisório</span>
+            <span className="hidden 2xl:inline">Botão Admin provisório</span>
+            <span className="hidden sm:inline 2xl:hidden">Admin</span>
             <span className="inline sm:hidden">Admin</span>
           </button>
 
@@ -144,7 +146,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <LanguageSelector variant="dropdown" />
           </div>
 
-          {/* Botão Principal para Agendar Reunião */}
+          {/* Botão Principal para Agendar Avaliação */}
           {/* Versão Desktop / Tablet com texto completo que não corta */}
           <button
             type="button"
@@ -156,11 +158,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Calendar className="w-3.5 h-3.5 xl:w-4 xl:h-4 shrink-0" />
-            <span className="hidden xl:inline">Agendar avaliação</span>
-            <span className="inline xl:hidden">Agendar</span>
+            <span className="hidden md:inline">Agendar avaliação</span>
+            <span className="inline md:hidden">Agendar</span>
           </button>
 
-          {/* Versão Compacta Mobile "Agendar" (conforme Imagem 2 de referência) */}
+          {/* Versão Compacta Mobile "Agendar" */}
           <button
             type="button"
             onClick={onOpenBooking}

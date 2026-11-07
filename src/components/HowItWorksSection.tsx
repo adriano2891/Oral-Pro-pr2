@@ -63,13 +63,15 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onOpenBook
         </div>
 
         {/* 5 Steps Timeline / Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {steps.map((st, idx) => {
             const Icon = st.icon;
             return (
               <div
                 key={st.step}
-                className="relative p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:border-blue-300 hover:shadow-md transition-all text-left flex flex-col justify-between group"
+                className={`relative p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:border-blue-300 hover:shadow-md transition-all text-left flex flex-col justify-between group ${
+                  idx === 4 ? 'sm:col-span-2 lg:col-span-1' : ''
+                }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">

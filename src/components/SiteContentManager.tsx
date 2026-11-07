@@ -1284,7 +1284,7 @@ export const SiteContentManager: React.FC<SiteContentManagerProps> = ({
       {/* ============================================================== */}
       {showAddImageModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-slate-200 max-w-lg w-full p-6 sm:p-7 shadow-2xl space-y-5 animate-fadeIn">
+          <div className="bg-white rounded-3xl border border-slate-200 max-w-lg w-full p-6 sm:p-7 shadow-2xl space-y-5 animate-fadeIn max-h-[92vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold text-slate-900 font-display">
