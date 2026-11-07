@@ -1,146 +1,159 @@
 import React from 'react';
 import { OralProLogo } from './OralProLogo';
 import { PageView } from '../types';
-import { Instagram, Clock, ExternalLink } from 'lucide-react';
-import { useLanguage } from '../i18n/LanguageContext';
+import { MapPin, Phone, Clock, MessageCircle, ExternalLink, ShieldCheck } from 'lucide-react';
+import { CLINIC_ATTENDANCE_DATA } from '../data/attendanceData';
 
 interface FooterProps {
   onNavigate: (page: PageView) => void;
   onOpenBooking: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  const { t } = useLanguage();
-
+export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenBooking }) => {
   return (
     <footer className="bg-slate-950 text-slate-400 text-xs border-t border-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           {/* Brand lockup */}
-          <div className="md:col-span-5 space-y-4">
+          <div className="md:col-span-4 space-y-4 text-left">
             <OralProLogo size="md" light />
-            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm">
-              {t.meta.description}
+            <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
+              OralPro Clínica Odontológica — Cuidado humanizado, tecnologia e compromisso integral com a saúde e a beleza do seu sorriso.
             </p>
-            <div className="flex flex-wrap items-center gap-3 pt-1">
-              <a
-                href="https://www.instagram.com/oralpro.italia/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-colors"
-              >
-                <Instagram className="w-3.5 h-3.5 text-rose-400" />
-                <span className="font-semibold text-[11px]">@oralpro.italia</span>
-                <ExternalLink className="w-3 h-3 text-slate-500" />
-              </a>
-              <div className="inline-flex items-center gap-1 text-[11px] text-slate-400">
-                <Clock className="w-3.5 h-3.5 text-blue-400" />
-                <span>{t.common.lisbonTime}</span>
-              </div>
+            <div className="pt-1 flex items-center gap-2 text-slate-500 text-[11px]">
+              <ShieldCheck className="w-4 h-4 text-blue-500" />
+              <span>Ambiente clínico seguro e higienizado</span>
             </div>
           </div>
 
           {/* Navigation Links */}
-          <div className="md:col-span-3 space-y-3">
+          <div className="md:col-span-2 space-y-3 text-left">
             <span className="font-bold text-slate-200 text-xs uppercase tracking-wider block">
-              {t.nav.home}
+              Navegação
             </span>
             <ul className="space-y-2">
               <li>
                 <button
+                  type="button"
                   onClick={() => onNavigate('home')}
                   className="hover:text-white transition-colors cursor-pointer"
                 >
-                  {t.nav.home}
+                  Início
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => onNavigate('servicos')}
-                  className="hover:text-white transition-colors cursor-pointer"
-                >
-                  {t.nav.services}
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onNavigate('metodo')}
-                  className="hover:text-white transition-colors cursor-pointer"
-                >
-                  {t.nav.method}
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onNavigate('areas')}
-                  className="hover:text-white transition-colors cursor-pointer"
-                >
-                  {t.nav.areas}
-                </button>
-              </li>
-              <li>
-                <button
+                  type="button"
                   onClick={() => onNavigate('sobre')}
                   className="hover:text-white transition-colors cursor-pointer"
                 >
-                  {t.nav.about}
+                  Sobre a clínica
                 </button>
               </li>
               <li>
                 <button
+                  type="button"
+                  onClick={() => onNavigate('servicos')}
+                  className="hover:text-white transition-colors cursor-pointer"
+                >
+                  Tratamentos
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('metodo')}
+                  className="hover:text-white transition-colors cursor-pointer"
+                >
+                  Diferenciais
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
                   onClick={() => onNavigate('duvidas')}
                   className="hover:text-white transition-colors cursor-pointer"
                 >
-                  {t.nav.faq}
+                  Perguntas frequentes
                 </button>
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={() => onNavigate('contactos')}
                   className="hover:text-white transition-colors cursor-pointer"
                 >
-                  {t.nav.contact}
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onNavigate('agendamento')}
-                  className="hover:text-white text-blue-400 font-semibold transition-colors cursor-pointer"
-                >
-                  {t.common.scheduleMeeting}
+                  Contactos
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Compliance & Ethics */}
-          <div className="md:col-span-4 space-y-3">
+          {/* Treatments List */}
+          <div className="md:col-span-3 space-y-3 text-left">
             <span className="font-bold text-slate-200 text-xs uppercase tracking-wider block">
-              Compliance & Ethics
+              Tratamentos
             </span>
-            <p className="text-slate-500 text-[11px] leading-relaxed">
-              {t.common.medicalEthicsNotice}
-            </p>
-            <div className="pt-2 flex items-center justify-between border-t border-slate-900 text-slate-500 text-[11px]">
-              <span>{t.common.confirmedClinics}</span>
-              <button
-                onClick={() => onNavigate('admin')}
-                className="hover:text-slate-300 font-semibold"
-              >
-                {t.common.adminPortal}
-              </button>
+            <ul className="space-y-1.5 text-[11px]">
+              <li>Avaliação odontológica</li>
+              <li>Limpeza dentária (Profilaxia)</li>
+              <li>Clareamento dental</li>
+              <li>Restaurações estéticas</li>
+              <li>Tratamento de canal (Endodontia)</li>
+              <li>Implantes dentários</li>
+              <li>Aparelhos ortodônticos</li>
+              <li>Próteses dentárias</li>
+              <li>Estética dental (Facetas)</li>
+            </ul>
+          </div>
+
+          {/* Contacts & Location */}
+          <div className="md:col-span-3 space-y-3 text-left">
+            <span className="font-bold text-slate-200 text-xs uppercase tracking-wider block">
+              Localização & Contactos
+            </span>
+            <div className="space-y-2 text-slate-400">
+              <div className="flex items-start gap-2">
+                <MapPin className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                <span>{CLINIC_ATTENDANCE_DATA.address}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span className="text-white font-bold">+55 (11) 93473-9629</span>
+              </div>
+              <div className="flex items-start gap-2 text-[11px]">
+                <Clock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <span>Seg a Sex: 08:30 - 19:30 | Sáb: 08:30 - 13:00</span>
+              </div>
+
+              <div className="pt-2">
+                <a
+                  href={CLINIC_ATTENDANCE_DATA.googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-900/60 text-blue-200 hover:text-white hover:bg-blue-800 transition-colors text-[11px]"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Ver no Google Maps</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="pt-8 mt-10 border-t border-slate-900/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
-          <p>© {new Date().getFullYear()} OralPro. {t.common.allRightsReserved}</p>
+        {/* Bottom Bar with Admin link and copyright */}
+        <div className="mt-12 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+          <p>© {new Date().getFullYear()} OralPro Clínica Odontológica. Todos os direitos reservados.</p>
           <div className="flex items-center gap-4">
-            <span>{t.common.privacy}</span>
-            <span>·</span>
-            <span>{t.common.terms}</span>
-            <span>·</span>
-            <span className="text-slate-400">{t.common.location}</span>
+            <button
+              type="button"
+              onClick={() => onNavigate('admin')}
+              className="hover:text-blue-400 transition-colors cursor-pointer"
+            >
+              Acesso Administrativo
+            </button>
+            <span>•</span>
+            <span>Atendimento Humanizado</span>
           </div>
         </div>
       </div>

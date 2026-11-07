@@ -12,8 +12,8 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const availableLanguages: Array<{ code: Language; name: string; locale: string }> = [
-  { code: 'pt', name: 'Português', locale: 'pt-PT' },
-  { code: 'en', name: 'English', locale: 'en-GB' },
+  { code: 'pt', name: 'Português (BR)', locale: 'pt-BR' },
+  { code: 'en', name: 'English', locale: 'en-US' },
   { code: 'it', name: 'Italiano', locale: 'it-IT' },
 ];
 
@@ -35,7 +35,7 @@ export const LanguageProvider: React.FC<{
         return saved;
       }
     }
-    return 'pt'; // Default on first visit is Portuguese (pt-PT)
+    return 'pt'; // Default on first visit is Portuguese BR (pt-BR)
   });
 
   const setLanguage = (newLang: Language) => {

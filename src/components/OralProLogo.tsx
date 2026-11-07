@@ -21,7 +21,7 @@ export const OralProEmblem: React.FC<EmblemProps> = ({
     xs: 'w-6 h-6',
     sm: 'w-8 h-8',
     md: 'w-10 h-10 sm:w-12 sm:h-12',
-    header: 'w-11 h-11 sm:w-14 sm:h-14 md:w-16 md:h-16',
+    header: 'w-10 h-10 sm:w-12 sm:h-12 md:w-13 md:h-13',
     lg: 'w-14 h-14 sm:w-16 sm:h-16',
     xl: 'w-20 h-20',
   }[size];
@@ -87,7 +87,7 @@ export const OralProLogo: React.FC<LogoProps> = ({
   const textStyles = {
     sm: 'text-sm font-black tracking-wider',
     md: 'text-lg font-black tracking-wider',
-    header: 'text-xl sm:text-2xl md:text-3xl font-black tracking-tight leading-none',
+    header: 'text-lg sm:text-xl md:text-2xl font-black tracking-tight leading-none',
     lg: 'text-2xl font-black tracking-wider',
     xl: 'text-3xl font-black tracking-wider',
   }[size];
@@ -95,7 +95,7 @@ export const OralProLogo: React.FC<LogoProps> = ({
   const subStyles = {
     sm: 'text-[8.5px]',
     md: 'text-[9px]',
-    header: 'text-[8.5px] sm:text-[10px] md:text-xs uppercase tracking-wider font-semibold mt-0.5',
+    header: 'text-[7.5px] sm:text-[9px] md:text-[10px] uppercase tracking-wider font-semibold mt-0.5',
     lg: 'text-[11px]',
     xl: 'text-[12px]',
   }[size];
@@ -121,7 +121,7 @@ export const OralProLogo: React.FC<LogoProps> = ({
             </span>
           </div>
           <span className={`${subStyles} uppercase tracking-widest font-semibold mt-0.5 ${light ? 'text-slate-300' : 'text-slate-500'}`}>
-            Marketing Dentário
+            Clínica Odontológica
           </span>
         </div>
       )}

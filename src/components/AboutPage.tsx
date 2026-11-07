@@ -1,9 +1,7 @@
 import React from 'react';
-import { ShieldCheck, ChevronRight } from 'lucide-react';
-import { useLanguage } from '../i18n/LanguageContext';
-import { useSiteContent } from '../context/SiteContentContext';
+import { ShieldCheck, ChevronRight, Heart, Award, Sparkles, CheckCircle2, Calendar, MessageCircle, MapPin } from 'lucide-react';
 import { PageView } from '../types';
-import { InstagramGallerySection } from './InstagramGallerySection';
+import { CLINIC_ATTENDANCE_DATA } from '../data/attendanceData';
 
 interface AboutPageProps {
   onOpenBooking: () => void;
@@ -11,147 +9,109 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenBooking, onNavigate }) => {
-  const { t } = useLanguage();
-  const { getSlot } = useSiteContent();
-
-  const founderSlot = getSlot(
-    'about_founder',
-    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
-    'Mario Provenzano - OralPro'
-  );
-
-  const masterclassSlot = getSlot(
-    'about_masterclass',
-    'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80',
-    'Masterclass with Partnered Clinicians'
-  );
-
   return (
     <div className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         {onNavigate && (
           <nav className="flex items-center gap-2 text-xs text-slate-500 mb-8 font-medium">
-            <button onClick={() => onNavigate('home')} className="hover:text-blue-600 transition-colors cursor-pointer">
-              {t.nav.home}
+            <button
+              onClick={() => onNavigate('home')}
+              className="hover:text-blue-600 transition-colors cursor-pointer"
+            >
+              Início
             </button>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-slate-900 font-semibold">{t.nav.about}</span>
+            <span className="text-slate-900 font-semibold">Sobre a clínica</span>
           </nav>
         )}
 
         {/* Header */}
-        <div className="max-w-3xl mb-12">
-          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">
-            {t.about.tag}
-          </p>
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight text-balance">
-            {t.about.title}
+        <div className="max-w-3xl mb-12 text-left">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+            Institucional OralPro
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight mt-3">
+            Sobre a OralPro Clínica Odontológica
           </h1>
           <p className="text-slate-600 mt-4 text-base sm:text-lg leading-relaxed">
-            {t.about.p1}
+            Uma clínica moderna criada com o propósito de unir atendimento humanizado, precisão técnica e cuidado individualizado com a saúde e a estética do seu sorriso.
           </p>
         </div>
 
         {/* Narrative & Visuals */}
-        <div className="grid lg:grid-cols-12 gap-12 items-start mb-16">
+        <div className="grid lg:grid-cols-12 gap-12 items-center mb-16 text-left">
           <div className="lg:col-span-6 space-y-6">
             <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
-              {t.about.integrityTitle}
+              Nosso compromisso com você
             </h2>
-            <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
-              {t.about.p2}
+
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Na OralPro, acreditamos que ir ao dentista deve ser uma experiência tranquila, acolhedora e positiva. Sabemos que a saúde bucal impacta diretamente a sua qualidade de vida, mastigação, respiração e autoconfiança ao sorrir.
             </p>
 
-            <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-              <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                <ShieldCheck className="w-4 h-4 text-blue-600" />
-                <span>OralPro Core Standards</span>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Por isso, estruturamos uma abordagem que prioriza a escuta atenta, o diagnóstico minucioso e a elaboração de planos de tratamento claros, sem pressa e adaptados ao ritmo e às necessidades de cada paciente.
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-4 pt-2">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <Heart className="w-5 h-5 text-rose-600 mb-2" />
+                <h3 className="font-bold text-slate-900 text-sm mb-1">Atendimento Humanizado</h3>
+                <p className="text-xs text-slate-600">Empatia, escuta ativa e respeito em cada consulta.</p>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                {t.about.integrityText}
-              </p>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <ShieldCheck className="w-5 h-5 text-emerald-600 mb-2" />
+                <h3 className="font-bold text-slate-900 text-sm mb-1">Qualidade & Segurança</h3>
+                <p className="text-xs text-slate-600">Biossegurança e materiais certificados de alta durabilidade.</p>
+              </div>
             </div>
           </div>
 
-          <div className="lg:col-span-6 space-y-4">
-            <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-100">
+          <div className="lg:col-span-6">
+            <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-slate-100">
               <img
-                src={founderSlot.imageUrl}
-                alt={founderSlot.altText}
-                className={`w-full ${
-                  founderSlot.aspectRatio === '1:1'
-                    ? 'aspect-square'
-                    : founderSlot.aspectRatio === '4:3'
-                    ? 'aspect-[4/3]'
-                    : founderSlot.aspectRatio === '16:9'
-                    ? 'aspect-[16/9]'
-                    : 'aspect-[16/10]'
-                } ${founderSlot.fit === 'contain' ? 'object-contain' : 'object-cover'} ${
-                  founderSlot.position === 'top'
-                    ? 'object-top'
-                    : founderSlot.position === 'bottom'
-                    ? 'object-bottom'
-                    : 'object-center'
-                }`}
-                referrerPolicy="no-referrer"
+                src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80"
+                alt="Ambiente OralPro"
+                className="w-full aspect-[4/3] object-cover"
               />
-              <div className="p-4 bg-white border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="font-semibold text-slate-900">{t.about.photoCaption1}</span>
-                <span className="text-slate-500">{t.about.photoSub1}</span>
-              </div>
-            </div>
-
-            <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-100">
-              <img
-                src={masterclassSlot.imageUrl}
-                alt={masterclassSlot.altText}
-                className={`w-full ${
-                  masterclassSlot.aspectRatio === '1:1'
-                    ? 'aspect-square'
-                    : masterclassSlot.aspectRatio === '4:3'
-                    ? 'aspect-[4/3]'
-                    : masterclassSlot.aspectRatio === '16:10'
-                    ? 'aspect-[16/10]'
-                    : 'aspect-[16/9]'
-                } ${masterclassSlot.fit === 'contain' ? 'object-contain' : 'object-cover'} ${
-                  masterclassSlot.position === 'top'
-                    ? 'object-top'
-                    : masterclassSlot.position === 'bottom'
-                    ? 'object-bottom'
-                    : 'object-center'
-                }`}
-                referrerPolicy="no-referrer"
-              />
-              <div className="p-4 bg-white border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="font-semibold text-slate-900">{t.about.photoCaption2}</span>
-                <span className="text-slate-500">{t.about.photoSub2}</span>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute bottom-5 left-5 right-5 text-white">
+                <p className="font-bold text-sm">Instalações Projetadas para o Seu Bem-Estar</p>
+                <p className="text-xs text-slate-200">Localização privilegiada na Av. Paulista em São Paulo, com fácil estacionamento.</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Real Photographic Gallery from Instagram @oralpro.italia */}
-        <div className="my-14 -mx-4 sm:-mx-6 lg:-mx-8">
-          <InstagramGallerySection />
-        </div>
-
-        {/* CTA banner */}
-        <div className="bg-slate-900 text-white rounded-2xl p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="text-xl sm:text-2xl font-bold">
-              {t.finalCta.title}
-            </h3>
-            <p className="text-slate-400 text-xs sm:text-sm mt-1">
-              {t.finalCta.footnote}
+        {/* CTA Bar */}
+        <div className="p-8 rounded-3xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold text-white">Pronto para cuidar do seu sorriso?</h3>
+            <p className="text-xs sm:text-sm text-slate-300">
+              Agende sua avaliação odontológica e venha nos conhecer pessoalmente.
             </p>
           </div>
-          <button
-            onClick={onOpenBooking}
-            className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-lg text-sm transition-colors whitespace-nowrap"
-          >
-            {t.common.scheduleMeeting}
-          </button>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onOpenBooking}
+              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-colors shadow-md"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Agendar avaliação</span>
+            </button>
+            <a
+              href={`https://wa.me/${CLINIC_ATTENDANCE_DATA.whatsappNumber}?text=${encodeURIComponent(CLINIC_ATTENDANCE_DATA.defaultWhatsAppMessage)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-colors"
+              title="Falar no WhatsApp"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </a>
+          </div>
         </div>
       </div>
     </div>

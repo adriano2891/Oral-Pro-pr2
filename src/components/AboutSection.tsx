@@ -1,6 +1,5 @@
 import React from 'react';
-import { ShieldCheck, ExternalLink, ArrowRight } from 'lucide-react';
-import { useLanguage } from '../i18n/LanguageContext';
+import { Heart, ShieldCheck, UserCheck, Sparkles, Award, ArrowRight, MessageCircle } from 'lucide-react';
 import { useSiteContent } from '../context/SiteContentContext';
 import { PageView } from '../types';
 
@@ -10,152 +9,141 @@ interface AboutSectionProps {
 }
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onNavigate }) => {
-  const { t } = useLanguage();
   const { getSlot } = useSiteContent();
 
   const aboutSlot = getSlot(
     'home_about',
-    'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80',
-    'Eventi dal vivo OralPro - Mario Provenzano'
+    'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=1200&q=80',
+    'Atendimento acolhedor na OralPro'
   );
 
+  const pillars = [
+    {
+      icon: Heart,
+      title: 'Atendimento Humanizado',
+      description: 'Priorizamos a escuta atenta, o respeito ao seu tempo e o acolhimento sem pressa para que você se sinta seguro e confortável.',
+      color: 'text-rose-600 bg-rose-50',
+    },
+    {
+      icon: UserCheck,
+      title: 'Cuidado Individualizado',
+      description: 'Cada paciente possui um histórico único. Desenvolvemos planos de tratamento personalizados para as suas reais necessidades.',
+      color: 'text-blue-600 bg-blue-50',
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Qualidade nos Tratamentos',
+      description: 'Rigor absoluto em biossegurança, materiais odontológicos de alta durabilidade e técnicas clínicas respaldadas cientificamente.',
+      color: 'text-emerald-600 bg-emerald-50',
+    },
+    {
+      icon: Sparkles,
+      title: 'Busca por Excelência',
+      description: 'Dedicação diária à saúde bucal, estética funcional e ao aprimoramento constante para proporcionar resultados duradouros.',
+      color: 'text-amber-600 bg-amber-50',
+    },
+  ];
+
   return (
-    <section id="sobre" className="py-20 bg-white">
+    <section id="sobre" className="py-20 bg-white border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+            Sobre a OralPro
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black text-slate-950 tracking-tight mt-3">
+            Cuidado humanizado e compromisso com o seu sorriso
+          </h2>
+          <p className="text-slate-600 mt-4 text-base leading-relaxed">
+            A OralPro é uma clínica odontológica dedicada a transformar a saúde bucal e o bem-estar dos nossos pacientes através de uma odontologia ética, acolhedora e atenta a cada detalhe.
+          </p>
+        </div>
+
+        {/* Content Layout */}
         <div className="grid lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Authentic Real Context & Live Event Imagery */}
-          <div className="lg:col-span-6 space-y-4">
-            <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-md">
+          {/* Left Column: Image with Quality Badge */}
+          <div className="lg:col-span-6 relative">
+            <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-slate-100">
               <img
                 src={aboutSlot.imageUrl}
                 alt={aboutSlot.altText}
-                className={`w-full ${
-                  aboutSlot.aspectRatio === '1:1'
-                    ? 'aspect-square'
-                    : aboutSlot.aspectRatio === '4:3'
-                    ? 'aspect-[4/3]'
-                    : aboutSlot.aspectRatio === '16:9'
-                    ? 'aspect-[16/9]'
-                    : 'aspect-[16/10]'
-                } ${aboutSlot.fit === 'contain' ? 'object-contain' : 'object-cover'} ${
-                  aboutSlot.position === 'top'
-                    ? 'object-top'
-                    : aboutSlot.position === 'bottom'
-                    ? 'object-bottom'
-                    : 'object-center'
-                }`}
-                referrerPolicy="no-referrer"
+                className="w-full aspect-[4/3] sm:aspect-[16/11] object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
 
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-blue-600/90 text-[11px] font-semibold mb-1">
-                  <span>{t.about.photoCaption2}</span>
+              <div className="absolute bottom-5 left-5 right-5 text-white">
+                <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-blue-600 text-[11px] font-bold mb-1 shadow-sm">
+                  <span>Compromisso OralPro</span>
                 </div>
-                <p className="text-sm font-semibold">
-                  {t.about.photoSub2}
-                </p>
-                <p className="text-xs text-slate-300">
-                  {t.hero.photoSubcaption}
+                <h4 className="text-base font-bold text-white drop-shadow-xs">
+                  Saúde bucal integrada com carinho e respeito
+                </h4>
+                <p className="text-xs text-slate-200 mt-0.5">
+                  Consultas com tempo dedicado para esclarecer todas as suas dúvidas.
                 </p>
               </div>
             </div>
 
-            {/* Confirmed Indicator Notice Box */}
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <div className="text-xs text-slate-600 space-y-1">
-                <p className="font-semibold text-slate-800">
-                  {t.about.integrityTitle}
-                </p>
-                <p>
-                  {t.about.integrityText}{' '}
-                  (<a
-                    href="https://www.instagram.com/oralpro.italia/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 font-semibold underline hover:text-blue-800"
-                  >
-                    @oralpro.italia
-                  </a>).
-                </p>
+            {/* Float badge */}
+            <div className="absolute -bottom-4 right-4 sm:-bottom-5 sm:right-6 bg-white py-2.5 px-4 rounded-2xl shadow-lg border border-slate-200/90 flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <Award className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Padrão Clínico
+                </span>
+                <span className="text-xs font-extrabold text-slate-900">
+                  Excelência & Biossegurança
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Narrative & Leadership */}
+          {/* Right Column: Pillars of Care */}
           <div className="lg:col-span-6 space-y-6">
-            <div>
-              <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">
-                {t.about.tag}
-              </p>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-950 tracking-tight text-balance">
-                {t.about.title}
-              </h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {pillars.map((p, idx) => {
+                const Icon = p.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="p-5 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-blue-200 hover:shadow-md transition-all text-left"
+                  >
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${p.color}`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-bold text-slate-900 text-sm mb-1.5">
+                      {p.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      {p.description}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
 
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              {t.about.p1}
-            </p>
-
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {t.about.p2}
-            </p>
-
-            {/* Facts Grid */}
-            <div className="grid grid-cols-2 gap-4 pt-2">
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <div className="flex items-center gap-2 text-blue-700 font-bold text-2xl font-display">
-                  <span>{t.about.stat1Number}</span>
-                </div>
-                <p className="text-xs font-semibold text-slate-900 mt-1">
-                  {t.about.stat1Title}
-                </p>
-                <p className="text-[11px] text-slate-500">
-                  {t.about.stat1Desc}
-                </p>
-              </div>
-
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <div className="flex items-center gap-2 text-blue-700 font-bold text-2xl font-display">
-                  <span>{t.about.stat2Number}</span>
-                </div>
-                <p className="text-xs font-semibold text-slate-900 mt-1">
-                  {t.about.stat2Title}
-                </p>
-                <p className="text-[11px] text-slate-500">
-                  {t.about.stat2Desc}
-                </p>
-              </div>
-            </div>
-
-            {/* Direct meeting CTA and full page link */}
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+            {/* CTAs */}
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <button
+                type="button"
                 onClick={onOpenBooking}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold px-5 py-3 rounded-lg shadow-sm transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl shadow-xs transition-colors cursor-pointer text-xs sm:text-sm"
               >
-                {t.about.ctaButton}
+                <span>Agendar avaliação na clínica</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
 
-              {onNavigate && (
-                <button
-                  onClick={() => onNavigate('sobre')}
-                  className="inline-flex items-center gap-1.5 px-4 py-3 rounded-lg text-xs font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
-                >
-                  <span>Ler História Completa</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              )}
-
               <a
-                href="https://www.instagram.com/oralpro.italia/"
+                href="https://wa.me/5511934739629?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20a%20cl%C3%ADnica%20OralPro."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 ml-auto"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold px-5 py-3 rounded-xl border border-slate-200/90 transition-colors cursor-pointer text-xs sm:text-sm"
               >
-                <span>{t.about.viewInstagram}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <MessageCircle className="w-4 h-4 text-emerald-600" />
+                <span>Conversar no WhatsApp</span>
               </a>
             </div>
           </div>

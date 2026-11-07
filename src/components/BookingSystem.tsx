@@ -137,11 +137,11 @@ METHOD:REQUEST
 BEGIN:VEVENT
 UID:${confirmedBooking.id}@oralpro.com
 DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTSTART;TZID=Europe/Lisbon:${cleanDate}T${cleanTime}
-DTEND;TZID=Europe/Lisbon:${cleanDate}T${cleanTime}
+DTSTART;TZID=America/Sao_Paulo:${cleanDate}T${cleanTime}
+DTEND;TZID=America/Sao_Paulo:${cleanDate}T${cleanTime}
 SUMMARY:OralPro: ${confirmedBooking.typeLabel}
-DESCRIPTION:Strategic commercial diagnostic with the OralPro team for ${confirmedBooking.clinicName}. Lisbon Time (Europe/Lisbon).
-LOCATION:Google Meet / Online
+DESCRIPTION:Consulta Odontológica na OralPro Clínica para ${confirmedBooking.name}. Horário de Brasília (São Paulo). Endereço: Av. Paulista, 1578 - 14º Andar, São Paulo - SP.
+LOCATION:OralPro - Av. Paulista, 1578 - 14º Andar, São Paulo - SP
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`;

@@ -3,14 +3,13 @@ import { PageView, Language } from './types';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
-import { ChallengesSection } from './components/ChallengesSection';
+import { AboutSection } from './components/AboutSection';
 import { ServicesSection } from './components/ServicesSection';
 import { MethodSection } from './components/MethodSection';
-import { SpecialtiesSection } from './components/SpecialtiesSection';
-import { AboutSection } from './components/AboutSection';
-import { ExperienceTrustSection } from './components/ExperienceTrustSection';
+import { HowItWorksSection } from './components/HowItWorksSection';
 import { FAQSection } from './components/FAQSection';
 import { CTASection } from './components/CTASection';
+import { LocationContactSection } from './components/LocationContactSection';
 import { ServicesPage } from './components/ServicesPage';
 import { MethodPage } from './components/MethodPage';
 import { AreasPage } from './components/AreasPage';
@@ -21,7 +20,6 @@ import { BookingPage } from './components/BookingPage';
 import { BookingSystem } from './components/BookingSystem';
 import { ChatAgent } from './components/ChatAgent';
 import { AdminDashboard } from './components/AdminDashboard';
-import { InstagramGallerySection } from './components/InstagramGallerySection';
 import { DynamicCustomSections } from './components/DynamicCustomSections';
 import { SiteContentProvider, useSiteContent } from './context/SiteContentContext';
 import { Footer } from './components/Footer';
@@ -58,36 +56,36 @@ const PAGE_ALIASES: Record<string, PageView> = {
 
 const PAGE_TITLES: Record<string, Record<PageView, string>> = {
   pt: {
-    home: 'OralPro - Marketing e Captação para Clínicas Dentárias',
-    servicos: 'Serviços Especializados | OralPro',
-    metodo: 'O Método em 4 Etapas | OralPro',
-    areas: 'Áreas Clínicas de Alto Valor | OralPro',
-    sobre: 'Sobre a OralPro & Mario Provenzano | OralPro',
-    duvidas: 'Perguntas Frequentes & Dúvidas | OralPro',
-    contactos: 'Contactos & Localização | OralPro',
-    agendamento: 'Agendar Reunião de Diagnóstico | OralPro',
-    admin: 'Painel de Gestão Comercial | OralPro',
+    home: 'OralPro - Clínica Odontológica Especializada',
+    servicos: 'Tratamentos Odontológicos | OralPro',
+    metodo: 'Diferenciais & Atendimento | OralPro',
+    areas: 'Especialidades Odontológicas | OralPro',
+    sobre: 'Sobre a Clínica | OralPro',
+    duvidas: 'Perguntas Frequentes | OralPro',
+    contactos: 'Localização e Contato | OralPro',
+    agendamento: 'Agendar Avaliação Odontológica | OralPro',
+    admin: 'Painel de Gestão | OralPro',
   },
   it: {
-    home: 'OralPro - Marketing e Acquisizione Pazienti per Studi Dentistici',
-    servicos: 'Servizi Specialistici | OralPro',
-    metodo: 'Il Metodo in 4 Fasi | OralPro',
-    areas: 'Aree Cliniche ad Alto Valore | OralPro',
-    sobre: 'Chi Siamo & Mario Provenzano | OralPro',
-    duvidas: 'Domande Frequenti (FAQ) | OralPro',
-    contactos: 'Contatti & Sede | OralPro',
-    agendamento: 'Prenota Diagnosi Strategica | OralPro',
+    home: 'OralPro - Clinica Odontoiatrica Specializzata',
+    servicos: 'Trattamenti Odontoiatrici | OralPro',
+    metodo: 'Il Nostro Metodo e Differenziali | OralPro',
+    areas: 'Specializzazioni Cliniche | OralPro',
+    sobre: 'Chi Siamo | OralPro',
+    duvidas: 'Domande Frequenti | OralPro',
+    contactos: 'Contatti e Sede | OralPro',
+    agendamento: 'Prenota Valutazione Dentale | OralPro',
     admin: 'Pannello di Gestione | OralPro',
   },
   en: {
-    home: 'OralPro - Dental Practice Marketing & High-Value Patient Acquisition',
-    servicos: 'Specialized Services | OralPro',
-    metodo: 'The 4-Step Methodology | OralPro',
-    areas: 'High-Ticket Clinical Specialties | OralPro',
-    sobre: 'About OralPro & Mario Provenzano | OralPro',
+    home: 'OralPro - Advanced Dental Clinic',
+    servicos: 'Dental Treatments | OralPro',
+    metodo: 'Why Choose OralPro | OralPro',
+    areas: 'Clinical Specialties | OralPro',
+    sobre: 'About Our Clinic | OralPro',
     duvidas: 'Frequently Asked Questions | OralPro',
-    contactos: 'Contact Us | OralPro',
-    agendamento: 'Schedule Strategic Diagnostic | OralPro',
+    contactos: 'Location & Contact | OralPro',
+    agendamento: 'Schedule Dental Evaluation | OralPro',
     admin: 'Management Portal | OralPro',
   },
 };
@@ -213,7 +211,7 @@ function MainAppLayout() {
 
   return (
     <LanguageProvider currentPage={currentPage} onPageChange={setCurrentPage}>
-      <div className="min-h-screen flex flex-col bg-white selection:bg-blue-600 selection:text-white">
+      <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-blue-600 selection:text-white">
         {/* Top Header - Always visible with active page indicator */}
         <Navbar
           currentPage={currentPage}
@@ -230,7 +228,10 @@ function MainAppLayout() {
                 onOpenBooking={() => handleNavigate('agendamento')}
                 onOpenChat={handleOpenChat}
               />
-              <ChallengesSection onOpenBooking={() => handleNavigate('agendamento')} />
+              <AboutSection
+                onOpenBooking={() => handleNavigate('agendamento')}
+                onNavigate={handleNavigate}
+              />
               <ServicesSection
                 onOpenBooking={() => handleNavigate('agendamento')}
                 onNavigate={handleNavigate}
@@ -239,22 +240,16 @@ function MainAppLayout() {
                 onOpenBooking={() => handleNavigate('agendamento')}
                 onNavigate={handleNavigate}
               />
-              <SpecialtiesSection
+              <HowItWorksSection
                 onOpenBooking={() => handleNavigate('agendamento')}
-                onNavigate={handleNavigate}
               />
-              <AboutSection
-                onOpenBooking={() => handleNavigate('agendamento')}
-                onNavigate={handleNavigate}
-              />
-              <InstagramGallerySection />
-              <ExperienceTrustSection onOpenBooking={() => handleNavigate('agendamento')} />
               <FAQSection
                 onOpenBooking={() => handleNavigate('agendamento')}
                 onOpenChat={handleOpenChat}
                 onNavigate={handleNavigate}
               />
               <CTASection onOpenBooking={() => handleNavigate('agendamento')} />
+              <LocationContactSection />
             </>
           )}
 

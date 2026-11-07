@@ -1,7 +1,6 @@
-import React from 'react';
-import { Target, Users, BarChart3, CheckCircle2, Calendar, ChevronRight } from 'lucide-react';
-import { useLanguage } from '../i18n/LanguageContext';
-import { useSiteContent } from '../context/SiteContentContext';
+import React, { useState } from 'react';
+import { Stethoscope, CheckCircle2, Calendar, ChevronRight, MessageCircle, Info, X, ExternalLink, Headset } from 'lucide-react';
+import { CLINIC_ATTENDANCE_DATA, TreatmentItem } from '../data/attendanceData';
 import { PageView } from '../types';
 
 interface ServicesPageProps {
@@ -10,16 +9,16 @@ interface ServicesPageProps {
   onNavigate?: (page: PageView) => void;
 }
 
-const SERVICE_SLOT_KEYS = [
-  'services_implantologia',
-  'services_ortodontia',
-  'services_estetica',
-];
-
 export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenBooking, onOpenChat, onNavigate }) => {
-  const { t } = useLanguage();
-  const { getSlot } = useSiteContent();
-  const icons = [Target, Users, BarChart3];
+  const [activeTreatment, setActiveTreatment] = useState<TreatmentItem | null>(null);
+  const treatments = CLINIC_ATTENDANCE_DATA.treatments;
+
+  const openWhatsAppWithTreatment = (treatmentName: string) => {
+    const text = encodeURIComponent(
+      `Olá! Vim pelo site da OralPro e gostaria de saber mais informações sobre o tratamento de ${treatmentName}.`
+    );
+    window.open(`https://wa.me/${CLINIC_ATTENDANCE_DATA.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <div className="py-12 bg-white">
@@ -28,131 +27,169 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenBooking, onOpe
         {onNavigate && (
           <nav className="flex items-center gap-2 text-xs text-slate-500 mb-8 font-medium">
             <button onClick={() => onNavigate('home')} className="hover:text-blue-600 transition-colors cursor-pointer">
-              {t.nav.home}
+              Início
             </button>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-slate-900 font-semibold">{t.nav.services}</span>
+            <span className="text-slate-900 font-semibold">Tratamentos Odontológicos</span>
           </nav>
         )}
 
         {/* Header */}
-        <div className="max-w-3xl mb-14">
-          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">
-            {t.services.tag}
-          </p>
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight text-balance">
-            {t.services.title}
+        <div className="max-w-3xl mb-14 text-left">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+            Catálogo Completo
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight mt-3">
+            Nossos Tratamentos Odontológicos
           </h1>
           <p className="text-slate-600 mt-4 text-base sm:text-lg leading-relaxed">
-            {t.services.subtitle}
+            Conheça todas as especialidades clínicas disponíveis na OralPro. Do alívio da dor aos tratamentos estéticos e reabilitação oral com implantes.
           </p>
         </div>
 
-        {/* Detailed Services Sections */}
-        <div className="space-y-16">
-          {t.services.serviceList.map((service, idx) => {
-            const Icon = icons[idx] || Target;
-            const isAlternate = idx % 2 !== 0;
-
-            return (
-              <div
-                key={service.number}
-                className={`p-8 sm:p-10 rounded-2xl border border-slate-200 ${
-                  isAlternate ? 'bg-white' : 'bg-slate-50'
-                }`}
-              >
-                <div className="grid lg:grid-cols-12 gap-8">
-                  <div className="lg:col-span-7 space-y-4">
-                    <div className="inline-flex items-center gap-2 text-xs font-bold text-blue-700 bg-blue-100/80 px-2.5 py-1 rounded">
-                      <Icon className="w-3.5 h-3.5" />
-                      <span>{t.services.tag} · {service.number}</span>
-                    </div>
-
-                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
-                      {service.title}
-                    </h2>
-
-                    <p className="text-sm text-slate-700 leading-relaxed">
-                      {service.whatItIs}
-                    </p>
-
-                    <div className="space-y-2 pt-2">
-                      <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                        {t.services.routineIntegration}:
-                      </h4>
-                      <ul className="space-y-2 text-xs text-slate-600">
-                        {service.features.map((f) => (
-                          <li key={f} className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
-                            <span>{f}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+        {/* 10 Treatments Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 text-left">
+          {treatments.map((tr) => (
+            <div
+              key={tr.id}
+              className="bg-white rounded-2xl p-6 border border-slate-200 shadow-2xs hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                    <Stethoscope className="w-5 h-5" />
                   </div>
+                  <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    Disponível
+                  </span>
+                </div>
 
-                  <div
-                    className={`lg:col-span-5 p-6 rounded-xl border border-slate-200 flex flex-col justify-between ${
-                      isAlternate ? 'bg-slate-50' : 'bg-white'
-                    }`}
-                  >
-                    <div>
-                      {(() => {
-                        const slot = getSlot(SERVICE_SLOT_KEYS[idx] || '');
-                        if (!slot.imageUrl) return null;
-                        return (
-                          <div className="mb-4 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shadow-xs">
-                            <img
-                              src={slot.imageUrl}
-                              alt={slot.altText || service.title}
-                              className={`w-full ${
-                                slot.aspectRatio === '1:1'
-                                  ? 'aspect-square'
-                                  : slot.aspectRatio === '16:9'
-                                  ? 'aspect-[16/9]'
-                                  : 'aspect-[4/3]'
-                              } ${slot.fit === 'contain' ? 'object-contain' : 'object-cover'} ${
-                                slot.position === 'top'
-                                  ? 'object-top'
-                                  : slot.position === 'bottom'
-                                  ? 'object-bottom'
-                                  : 'object-center'
-                              }`}
-                              referrerPolicy="no-referrer"
-                            />
-                          </div>
-                        );
-                      })()}
+                <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-2">
+                  {tr.name}
+                </h3>
 
-                      <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
-                        {t.services.forWhomLabel}
-                      </h4>
-                      <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                        {service.whoIsItFor}
-                      </p>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                  {tr.shortDesc}
+                </p>
 
-                      <h4 className="text-xs font-bold text-blue-700 uppercase tracking-wider mb-2">
-                        {t.services.howHelpsLabel}
-                      </h4>
-                      <p className="text-xs text-slate-700 leading-relaxed mb-4">
-                        {service.howItHelps}
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={onOpenBooking}
-                      className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-1.5"
-                    >
-                      <Calendar className="w-4 h-4" />
-                      <span>{t.common.scheduleMeeting}</span>
-                    </button>
-                  </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs text-slate-600 mb-4">
+                  <span className="font-semibold text-slate-800 block mb-0.5">Para que serve:</span>
+                  {tr.purpose}
                 </div>
               </div>
-            );
-          })}
+
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-medium">Estimativa</span>
+                  <span className="text-xs font-bold text-blue-700">{tr.demoPrice}</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTreatment(tr)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white text-xs font-bold transition-all cursor-pointer"
+                >
+                  <span>Ver detalhes</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Global Notice Box */}
+        <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 shadow-2xs max-w-3xl mx-auto flex items-start gap-3 text-left mb-12">
+          <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-900 leading-relaxed">
+            <strong className="text-amber-950">Aviso sobre estimativas: </strong>
+            {CLINIC_ATTENDANCE_DATA.priceDisclaimer}
+          </p>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="p-8 rounded-3xl bg-blue-600 text-white flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <div>
+            <h3 className="text-xl font-bold">Deseja agendar uma avaliação odontológica?</h3>
+            <p className="text-xs sm:text-sm text-blue-100">Nossa equipe está pronta para orientar o melhor tratamento para você.</p>
+          </div>
+          <button
+            onClick={onOpenBooking}
+            className="px-6 py-3 rounded-xl bg-white text-blue-700 font-bold text-xs sm:text-sm shadow-md hover:bg-blue-50 transition-colors cursor-pointer"
+          >
+            Agendar avaliação
+          </button>
         </div>
       </div>
+
+      {/* Modal Saiba Mais */}
+      {activeTreatment && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 text-left space-y-4">
+            <div className="flex items-start justify-between pb-3 border-b border-slate-100">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                  Procedimento Odontológico
+                </span>
+                <h3 className="text-xl font-black text-slate-900 mt-1">
+                  {activeTreatment.name}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTreatment(null)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div>
+              <span className="text-xs font-bold text-slate-800 block mb-1">Sobre o procedimento</span>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{activeTreatment.shortDesc}</p>
+            </div>
+
+            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+              <span className="text-xs font-bold text-blue-700 block mb-1">Para que serve:</span>
+              <p className="text-xs text-slate-600 leading-relaxed">{activeTreatment.purpose}</p>
+            </div>
+
+            <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-1">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-amber-900 font-medium">Estimativa demonstrativa:</span>
+                <strong className="text-blue-800 font-black">{activeTreatment.demoPrice}</strong>
+              </div>
+              <p className="text-[11px] text-amber-800 leading-relaxed">{CLINIC_ATTENDANCE_DATA.priceDisclaimer}</p>
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTreatment(null);
+                  onOpenBooking();
+                }}
+                className="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+              >
+                <Calendar className="w-4 h-4" />
+                <span>Agendar avaliação</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openWhatsAppWithTreatment(activeTreatment.name)}
+                className="flex-1 py-3 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Headset className="w-4 h-4 text-emerald-600" />
+                <span>Tirar dúvidas no WhatsApp</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Search, Compass, Rocket, Activity, Check, ArrowRight, ShieldCheck, ChevronRight, Calendar, Users, Target } from 'lucide-react';
-import { useLanguage } from '../i18n/LanguageContext';
+import { Heart, UserCheck, Home, Smile, Compass, Award, Check, ArrowRight, ChevronRight, Calendar, PhoneCall, CheckSquare, MessageCircle } from 'lucide-react';
 import { PageView } from '../types';
 
 interface MethodPageProps {
@@ -10,224 +9,142 @@ interface MethodPageProps {
 }
 
 export const MethodPage: React.FC<MethodPageProps> = ({ onNavigate, onOpenBooking, onOpenChat }) => {
-  const { t } = useLanguage();
-  const icons = [Search, Compass, Rocket, Activity];
+  const differentiators = [
+    {
+      icon: Heart,
+      title: 'Atendimento Humanizado',
+      description: 'Acolhimento com calma, escuta ativa e empatia desde o primeiro contato, garantindo que você se sinta seguro e tranquilo.',
+      details: ['Escuta atenta das suas queixas', 'Atendimento sem pressa', 'Respeito ao paciente'],
+    },
+    {
+      icon: UserCheck,
+      title: 'Atenção Individualizada',
+      description: 'Cada paciente é único. Nossos planos de cuidado são estruturados sob medida para suas necessidades clínicas e objetivos.',
+      details: ['Planejamento personalizado', 'Diagnóstico criterioso', 'Foco na sua saúde integral'],
+    },
+    {
+      icon: Home,
+      title: 'Ambiente Acolhedor',
+      description: 'Um espaço clínico moderno, limpo, agradável e planejado para transformar sua visita ao dentista numa experiência positiva.',
+      details: ['Instalações modernas', 'Conforto e bem-estar', 'Biossegurança rigorosa'],
+    },
+    {
+      icon: Smile,
+      title: 'Cuidado com Cada Sorriso',
+      description: 'Foco na prevenção, na preservação dos dentes naturais e na harmonia funcional e estética de toda a arcada dentária.',
+      details: ['Preservação do dente natural', 'Prevenção de problemas futuros', 'Estética natural'],
+    },
+    {
+      icon: Compass,
+      title: 'Orientação no Tratamento',
+      description: 'Explicamos com total clareza cada etapa do procedimento, esclarecendo dúvidas e orientando sobre os cuidados após a consulta.',
+      details: ['Explicação passo a passo', 'Acompanhamento pós-consulta', 'Transparência em orçamentos'],
+    },
+    {
+      icon: Award,
+      title: 'Compromisso com a Qualidade',
+      description: 'Rigor ético, padrões elevados de biossegurança e dedicação constante ao aperfeiçoamento das práticas odontológicas.',
+      details: ['Materiais biocompatíveis', 'Padrão clínico certificado', 'Ética médica odontológica'],
+    },
+  ];
+
+  const steps = [
+    { step: '01', title: 'Entre em contacto', desc: 'Envie uma mensagem pelo site, WhatsApp oficial ou fale com nossa assistente virtual.' },
+    { step: '02', title: 'Escolha o tratamento', desc: 'Indique o procedimento desejado ou solicite uma avaliação clínica inicial completa.' },
+    { step: '03', title: 'Solicite sua avaliação', desc: 'Escolha o dia e período (manhã, tarde ou noite) que melhor se encaixam na sua rotina.' },
+    { step: '04', title: 'Receba orientação da equipe', desc: 'Exame clínico cuidadoso, diagnóstico compreensível e orçamento transparente.' },
+    { step: '05', title: 'Inicie seu acompanhamento', desc: 'Procedimentos realizados com total carinho, segurança e foco no seu bem-estar.' },
+  ];
 
   return (
     <div className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-xs text-slate-500 mb-8 font-medium">
-          <button onClick={() => onNavigate('home')} className="hover:text-blue-600 transition-colors">
-            {t.nav.home}
+          <button onClick={() => onNavigate('home')} className="hover:text-blue-600 transition-colors cursor-pointer">
+            Início
           </button>
           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-          <span className="text-slate-900 font-semibold">{t.nav.method}</span>
+          <span className="text-slate-900 font-semibold">Diferenciais e Metodologia</span>
         </nav>
 
         {/* Page Hero Header */}
-        <div className="max-w-3xl mb-14">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full mb-3">
-            <span className="w-2 h-2 rounded-full bg-blue-600" />
-            <span>{t.method.tag}</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight text-balance">
-            {t.method.title}
+        <div className="max-w-3xl mb-14 text-left">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+            Diferenciais da OralPro
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight mt-3">
+            Por que escolher nossa clínica odontológica?
           </h1>
           <p className="text-slate-600 mt-4 text-base sm:text-lg leading-relaxed">
-            {t.method.subtitle}
+            Nossa filosofia combina o rigor da odontologia moderna com o calor do atendimento humanizado, colocando você e a saúde do seu sorriso no centro de cada decisão.
           </p>
         </div>
 
-        {/* 4 Steps In-Depth Layout */}
-        <div className="space-y-12 mb-20">
-          {t.method.steps.map((s, idx) => {
-            const Icon = icons[idx] || Search;
-            const isEven = idx % 2 === 1;
-
+        {/* 6 Differentiators Detailed Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 text-left">
+          {differentiators.map((diff, idx) => {
+            const Icon = diff.icon;
             return (
               <div
-                key={s.step}
-                className={`p-8 sm:p-10 rounded-2xl border transition-all ${
-                  isEven
-                    ? 'bg-slate-900 text-white border-slate-800 shadow-xl'
-                    : 'bg-slate-50 text-slate-900 border-slate-200 shadow-sm'
-                }`}
+                key={idx}
+                className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-blue-300 hover:shadow-md transition-all flex flex-col justify-between"
               >
-                <div className="grid lg:grid-cols-12 gap-8 items-start">
-                  <div className="lg:col-span-8 space-y-4">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={`text-xs font-extrabold px-3 py-1 rounded-md tracking-wider ${
-                          isEven
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-blue-100 text-blue-800'
-                        }`}
-                      >
-                        {s.step}
-                      </span>
-                      <span className={`text-xs font-semibold uppercase tracking-wider ${isEven ? 'text-blue-400' : 'text-slate-500'}`}>
-                        {s.subtitle}
-                      </span>
-                    </div>
-
-                    <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                      {s.title}
-                    </h2>
-
-                    <p className={`text-sm sm:text-base leading-relaxed ${isEven ? 'text-slate-300' : 'text-slate-700'}`}>
-                      {s.description}
-                    </p>
-
-                    <div className="pt-4 space-y-2.5">
-                      <h4 className={`text-xs font-bold uppercase tracking-wider ${isEven ? 'text-slate-400' : 'text-slate-900'}`}>
-                        Ações Clínicas & Comerciais:
-                      </h4>
-                      <div className="grid sm:grid-cols-2 gap-2.5 pt-1">
-                        {s.details.map((d) => (
-                          <div
-                            key={d}
-                            className={`flex items-start gap-2.5 p-3 rounded-lg border text-xs leading-relaxed ${
-                              isEven
-                                ? 'bg-slate-800/90 border-slate-700 text-slate-200'
-                                : 'bg-white border-slate-200 text-slate-800 shadow-2xs'
-                            }`}
-                          >
-                            <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                            <span>{d}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5" />
                   </div>
-
-                  <div className="lg:col-span-4 flex flex-col justify-between h-full space-y-6">
-                    <div
-                      className={`p-6 rounded-xl border flex flex-col items-center justify-center text-center ${
-                        isEven ? 'bg-slate-800/60 border-slate-700' : 'bg-white border-slate-200 shadow-xs'
-                      }`}
-                    >
-                      <div className="w-14 h-14 rounded-2xl bg-blue-600/10 flex items-center justify-center mb-3">
-                        <Icon className="w-7 h-7 text-blue-600" />
-                      </div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
-                        Impacto na Clínica
-                      </span>
-                      <p className={`text-xs font-medium leading-relaxed ${isEven ? 'text-slate-300' : 'text-slate-600'}`}>
-                        {idx === 0 && 'Previsibilidade exata da capacidade produtiva sem sobrecarregar a equipa médica.'}
-                        {idx === 1 && 'Posicionamento clínico sólido que afasta curiosos e atrai quem valoriza qualidade.'}
-                        {idx === 2 && 'Campanhas hiper-segmentadas gerando contactos já pré-qualificados para a receção.'}
-                        {idx === 3 && 'Revisão constante da taxa de comparência e fecho de tratamentos integrais.'}
-                      </p>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">{diff.title}</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">{diff.description}</p>
+                </div>
+                <div className="pt-3 border-t border-slate-200/80 space-y-1.5">
+                  {diff.details.map((item, i) => (
+                    <div key={i} className="flex items-center gap-2 text-xs text-slate-700">
+                      <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>{item}</span>
                     </div>
-
-                    <button
-                      onClick={onOpenBooking}
-                      className={`w-full py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                        isEven
-                          ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md'
-                          : 'bg-slate-900 hover:bg-slate-800 text-white shadow-sm'
-                      }`}
-                    >
-                      <span>Aplicar este passo à clínica</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                  ))}
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Methodology Comparison Table */}
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 sm:p-10 mb-16">
-          <div className="max-w-2xl mb-8">
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-950 tracking-tight">
-              A Diferença Entre Marketing Genérico e a Assessoria OralPro
-            </h3>
-            <p className="text-slate-600 text-xs sm:text-sm mt-1.5">
-              Não entregamos apenas cliques ou visualizações vazias. Estruturamos o fluxo completo de pacientes de alto valor.
-            </p>
+        {/* 5-Step Patient Journey */}
+        <div className="mb-20 text-left">
+          <div className="max-w-2xl mb-10">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">Jornada do Paciente</span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1">
+              Como funciona o seu atendimento
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-xl border border-rose-200/80 space-y-3">
-              <div className="flex items-center gap-2 text-rose-700 font-bold text-sm">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                <span>Agências Genéricas de Marketing</span>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {steps.map((st) => (
+              <div key={st.step} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
+                <span className="text-sm font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md inline-block">
+                  {st.step}
+                </span>
+                <h4 className="font-bold text-slate-900 text-sm">{st.title}</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">{st.desc}</p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-600 leading-relaxed">
-                <li className="flex items-start gap-2">
-                  <span className="text-rose-500 font-bold">✕</span>
-                  <span>Focam-se em métricas de vaidade (gostos, seguidores e impressões).</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-rose-500 font-bold">✕</span>
-                  <span>Atraem curiosos que apenas procuram o preço mais barato ou limpeza gratuita.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-rose-500 font-bold">✕</span>
-                  <span>Desconhecem os procedimentos clínicos (All-on-4, alinhadores, facetas cerâmicas).</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-rose-500 font-bold">✕</span>
-                  <span>Não formam a receção da clínica para converter contactos em presenças reais.</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl border border-blue-300 shadow-sm space-y-3">
-              <div className="flex items-center gap-2 text-blue-700 font-bold text-sm">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
-                <span>Método Exclusivo OralPro</span>
-              </div>
-              <ul className="space-y-2 text-xs text-slate-700 leading-relaxed">
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Foco direto em primeiras consultas de tratamentos de alto valor e faturação.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Triagem ativa que afasta curiosos antes de ocuparem a agenda do consultório.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Especialização 100% odontológica com experiência de mais de 281 clínicas.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Scripts e acompanhamento comercial da equipa da receção em tempo real.</span>
-                </li>
-              </ul>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* CTA Box */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <h3 className="text-xl sm:text-2xl font-bold">
-              Quer ver este método aplicado à sua clínica?
-            </h3>
-            <p className="text-xs sm:text-sm text-blue-100 max-w-xl">
-              Agende uma reunião de diagnóstico comercial de 30 minutos em Horário de Lisboa (Europe/Lisbon) com a nossa equipa.
-            </p>
+        {/* Bottom Banner */}
+        <div className="p-8 rounded-3xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <div>
+            <h3 className="text-xl font-bold">Venha conhecer a nossa equipe</h3>
+            <p className="text-xs sm:text-sm text-slate-300">Marque a sua consulta de avaliação e tire todas as suas dúvidas.</p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={onOpenBooking}
-              className="bg-white text-blue-900 hover:bg-blue-50 font-bold text-xs sm:text-sm px-6 py-3 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-2"
-            >
-              <Calendar className="w-4 h-4 text-blue-600" />
-              <span>{t.common.scheduleMeeting}</span>
-            </button>
-            <button
-              onClick={onOpenChat}
-              className="bg-blue-800/80 hover:bg-blue-800 text-white border border-blue-400/40 font-semibold text-xs sm:text-sm px-5 py-3 rounded-xl transition-all cursor-pointer"
-            >
-              {t.common.speakWithOralPro}
-            </button>
-          </div>
+          <button
+            onClick={onOpenBooking}
+            className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-colors cursor-pointer flex items-center gap-2"
+          >
+            <Calendar className="w-4 h-4" />
+            <span>Agendar avaliação</span>
+          </button>
         </div>
       </div>
     </div>

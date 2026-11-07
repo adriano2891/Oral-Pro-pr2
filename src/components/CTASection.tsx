@@ -1,56 +1,68 @@
 import React from 'react';
-import { Calendar, ArrowRight, ShieldCheck } from 'lucide-react';
-import { useLanguage } from '../i18n/LanguageContext';
+import { MessageCircle, Calendar, ArrowRight, ShieldCheck, HeartHandshake } from 'lucide-react';
+import { CLINIC_ATTENDANCE_DATA } from '../data/attendanceData';
 
 interface CTASectionProps {
   onOpenBooking: () => void;
 }
 
 export const CTASection: React.FC<CTASectionProps> = ({ onOpenBooking }) => {
-  const { t } = useLanguage();
+  const openWhatsApp = () => {
+    const text = encodeURIComponent(
+      'Olá! Vim pelo site OralPro e gostaria de falar com a equipe para cuidar do meu sorriso.'
+    );
+    window.open(`https://wa.me/${CLINIC_ATTENDANCE_DATA.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer');
+  };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-900 via-blue-950 to-slate-950 text-white relative overflow-hidden">
-      {/* Decorative pulse element matching brand ECG */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none flex items-center justify-center">
-        <svg viewBox="0 0 1000 200" className="w-full h-auto text-red-500 stroke-current">
-          <path
-            d="M0,100 L350,100 L380,40 L420,160 L450,20 L480,140 L520,100 L1000,100"
-            fill="none"
-            strokeWidth="10"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
+    <section className="py-20 bg-slate-900 text-white relative overflow-hidden border-b border-slate-800">
+      {/* Decorative ambient subtle glow */}
+      <div className="absolute top-0 right-1/4 -z-10 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 -z-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-800/60 border border-blue-700/60 text-xs font-semibold text-blue-200 mb-6">
-          <ShieldCheck className="w-3.5 h-3.5 text-blue-300" />
-          <span>{t.finalCta.badge}</span>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 text-xs font-semibold text-blue-300">
+          <HeartHandshake className="w-3.5 h-3.5 text-blue-400" />
+          <span>Atendimento Humanizado & Especializado</span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight text-balance leading-tight">
-          {t.finalCta.title}
+        {/* Title requested by user */}
+        <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight max-w-3xl mx-auto">
+          Está na hora de cuidar do seu sorriso?
         </h2>
 
-        <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          {t.finalCta.subtitle}
+        {/* Subtitle requested by user */}
+        <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Estamos prontos para ajudar você a dar o próximo passo para uma saúde bucal melhor.
         </p>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        {/* Action Buttons */}
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
-            onClick={onOpenBooking}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-400 active:bg-blue-600 text-slate-950 font-bold px-8 py-4 rounded-xl shadow-lg transition-all text-sm sm:text-base group"
+            type="button"
+            onClick={openWhatsApp}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-emerald-600/20 transition-all cursor-pointer text-sm tracking-wide"
           >
-            <Calendar className="w-5 h-5 text-slate-950" />
-            <span>{t.finalCta.button}</span>
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            <MessageCircle className="w-5 h-5" />
+            <span>Falar com nossa equipe</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onOpenBooking}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold px-6 py-4 rounded-xl border border-slate-700 transition-colors cursor-pointer text-sm"
+          >
+            <Calendar className="w-4 h-4 text-blue-400" />
+            <span>Ver horários de avaliação</span>
           </button>
         </div>
 
-        <p className="text-xs text-slate-400 mt-4">
-          {t.finalCta.footnote}
-        </p>
+        <div className="pt-4 text-xs text-slate-400 flex items-center justify-center gap-4">
+          <span>WhatsApp oficial: +55 (11) 93473-9629</span>
+          <span>•</span>
+          <span>Atendimento em horário comercial</span>
+        </div>
       </div>
     </section>
   );

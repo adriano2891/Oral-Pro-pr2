@@ -506,7 +506,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
 
         {/* Footer info */}
         <div className="max-w-md w-full mx-auto text-center text-[11px] text-slate-500">
-          <p>OralPro Italia &bull; Gestão de Conteúdos, Imagens e Captação &bull; Fuso Europe/Lisbon</p>
+          <p>OralPro &bull; Gestão da Clínica Odontológica &bull; São Paulo (Fuso de Brasília)</p>
         </div>
       </div>
     );
@@ -539,7 +539,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
               <span>{syncStatus}</span>
               <span className="text-slate-600">|</span>
               <Clock className="w-3 h-3 text-blue-400" />
-              <span>Europe/Lisbon</span>
+              <span>Horário de Brasília</span>
             </div>
 
             <LanguageSelector />
@@ -777,7 +777,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
                   </div>
                   <div className="text-2xl font-black text-slate-900">{bookings.length}</div>
                   <div className="text-xs font-semibold text-slate-600">Agendamentos Ativos</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Fuso Europe/Lisbon</div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">Fuso de Brasília</div>
                 </div>
               </div>
             </div>
@@ -1327,10 +1327,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                 <div>
                   <h1 className="text-2xl font-extrabold text-slate-900">
-                    Reuniões & Agendamentos Comerciais
+                    Consultas & Agendamentos
                   </h1>
                   <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                    Reuniões de diagnóstico e apresentação estratégica sincronizadas no fuso Europe/Lisbon.
+                    Consultas e avaliações odontológicas sincronizadas no fuso de Brasília (São Paulo).
                   </p>
                 </div>
 
@@ -1353,10 +1353,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] tracking-wider border-y border-slate-200">
                     <tr>
-                      <th className="py-3 px-4">Clínica & Contacto</th>
-                      <th className="py-3 px-4">Tipo de Reunião</th>
-                      <th className="py-3 px-4">Data & Hora (Lisboa)</th>
-                      <th className="py-3 px-4">Interesse / Gabinetes</th>
+                      <th className="py-3 px-4">Paciente & Contato</th>
+                      <th className="py-3 px-4">Tipo de Consulta</th>
+                      <th className="py-3 px-4">Data & Hora (Brasília)</th>
+                      <th className="py-3 px-4">Tratamento / Interesse</th>
                       <th className="py-3 px-4">Estado</th>
                       <th className="py-3 px-4 text-right">Ações</th>
                     </tr>
@@ -1586,7 +1586,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Hora (Lisboa)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Hora (Brasília)</label>
                   <input
                     type="time"
                     value={rescheduleTime}

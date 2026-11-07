@@ -24,42 +24,42 @@ export const BookingPage: React.FC<BookingPageProps> = ({ onNavigate }) => {
         </nav>
 
         {/* Page Hero Header */}
-        <div className="max-w-3xl mb-10">
+        <div className="max-w-3xl mb-10 text-left">
           <div className="inline-flex items-center gap-2 text-xs font-bold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full mb-3">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{t.common.lisbonTime} (Europe/Lisbon · UTC+1)</span>
+            <span>Atendimento com Hora Marcada · São Paulo - SP</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight text-balance">
-            Agendar Reunião de Diagnóstico Comercial
+            Agendar Avaliação Odontológica
           </h1>
           <p className="text-slate-600 mt-4 text-base sm:text-lg leading-relaxed">
-            Reunião estratégica individual online de 30 a 45 minutos com a equipa da OralPro. Analisamos a capacidade instalada da sua clínica dentária e desenhamos o plano de atração para pacientes de alto valor.
+            Escolha o dia, horário e procedimento de sua preferência. Nossa equipe clínica e recepção estão prontas para oferecer a melhor experiência em saúde e estética bucal.
           </p>
         </div>
 
-        {/* Key meeting guarantees */}
-        <div className="grid sm:grid-cols-3 gap-4 mb-12">
+        {/* Key clinic guarantees */}
+        <div className="grid sm:grid-cols-3 gap-4 mb-12 text-left">
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
-            <Video className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+            <UserCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-xs font-bold text-slate-900">Online & Sem Deslocações</h4>
-              <p className="text-[11px] text-slate-600 mt-0.5">Link direto de videoconferência enviado imediatamente.</p>
+              <h4 className="text-xs font-bold text-slate-900">Atendimento Humanizado</h4>
+              <p className="text-[11px] text-slate-600 mt-0.5">Cuidado individualizado focado no seu conforto e bem-estar.</p>
             </div>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
             <Clock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-xs font-bold text-slate-900">30 a 45 Minutos Focados</h4>
-              <p className="text-[11px] text-slate-600 mt-0.5">Sem rodeios: análise direta de gabinetes e faturação clínica.</p>
+              <h4 className="text-xs font-bold text-slate-900">Pontualidade & Comodidade</h4>
+              <p className="text-[11px] text-slate-600 mt-0.5">Consultas organizadas com tempo dedicado exclusivo para você.</p>
             </div>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
             <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-xs font-bold text-slate-900">Confidencial & Sem Compromisso</h4>
-              <p className="text-[11px] text-slate-600 mt-0.5">Dados da sua clínica protegidos e sem pressão comercial.</p>
+              <h4 className="text-xs font-bold text-slate-900">Segurança & Excelência</h4>
+              <p className="text-[11px] text-slate-600 mt-0.5">Protocolos rigorosos de esterilização e tecnologia moderna.</p>
             </div>
           </div>
         </div>

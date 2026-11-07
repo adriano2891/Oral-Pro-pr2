@@ -1,6 +1,19 @@
-import React from 'react';
-import { Target, Users, BarChart3, CheckCircle, ArrowRight } from 'lucide-react';
-import { useLanguage } from '../i18n/LanguageContext';
+import React, { useState } from 'react';
+import {
+  Stethoscope,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+  Calendar,
+  X,
+  ArrowRight,
+  Headset,
+  ChevronRight,
+  Info,
+  Clock,
+  Check,
+} from 'lucide-react';
+import { CLINIC_ATTENDANCE_DATA, TreatmentItem } from '../data/attendanceData';
 import { PageView } from '../types';
 
 interface ServicesSectionProps {
@@ -8,117 +21,193 @@ interface ServicesSectionProps {
   onNavigate?: (page: PageView) => void;
 }
 
-export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking, onNavigate }) => {
-  const { t } = useLanguage();
-  const icons = [Target, Users, BarChart3];
+export const ServicesSection: React.FC<ServicesSectionProps> = ({
+  onOpenBooking,
+  onNavigate,
+}) => {
+  const [activeTreatment, setActiveTreatment] = useState<TreatmentItem | null>(null);
+
+  const treatments = CLINIC_ATTENDANCE_DATA.treatments;
+
+  const openWhatsAppWithTreatment = (treatmentName: string) => {
+    const text = encodeURIComponent(
+      `Olá! Vim pelo site da OralPro e gostaria de tirar dúvidas sobre o tratamento de ${treatmentName}.`
+    );
+    window.open(`https://wa.me/${CLINIC_ATTENDANCE_DATA.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer');
+  };
 
   return (
-    <section id="servicos" className="py-20 bg-white">
+    <section id="tratamentos" className="py-20 bg-slate-50/70 border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mb-14">
-          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">
-            {t.services.tag}
-          </p>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-950 tracking-tight text-balance">
-            {t.services.title}
+        {/* Section Header */}
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+            Especialidades Clínicas
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black text-slate-950 tracking-tight mt-3">
+            Tratamentos Odontológicos Completos
           </h2>
-          <p className="text-slate-600 mt-3 text-sm sm:text-base leading-relaxed">
-            {t.services.subtitle}
+          <p className="text-slate-600 mt-4 text-base leading-relaxed">
+            Oferecemos cuidados integrais para todas as fases da sua saúde bucal, desde a prevenção e alívio da dor até a reabilitação protética e estética do sorriso.
           </p>
         </div>
 
-        <div className="space-y-8">
-          {t.services.serviceList.map((s, idx) => {
-            const Icon = icons[idx] || Target;
-            return (
-              <div
-                key={s.number}
-                className="rounded-2xl border border-slate-200/90 bg-white p-7 sm:p-9 hover:border-slate-300 hover:shadow-lg transition-all"
-              >
-                <div className="grid lg:grid-cols-12 gap-8 items-start">
-                  <div className="lg:col-span-5 space-y-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded">
-                        {s.number}
-                      </span>
-                      <Icon className="w-5 h-5 text-blue-600" />
-                    </div>
-
-                    <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                      {s.title}
-                    </h3>
-
-                    <p className="text-sm font-semibold text-slate-700 leading-snug">
-                      {s.headline}
-                    </p>
-
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      {s.whatItIs}
-                    </p>
-
-                    <div className="pt-2">
-                      <ul className="space-y-2">
-                        {s.features.map((f) => (
-                          <li key={f} className="flex items-center gap-2 text-xs text-slate-700 font-medium">
-                            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                            <span>{f}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+        {/* 10 Treatments Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {treatments.map((tr, idx) => (
+            <div
+              key={tr.id}
+              className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between text-left group"
+            >
+              <div>
+                {/* Header with Number & Status */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                    <Stethoscope className="w-5 h-5" />
                   </div>
+                  <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/80">
+                    Disponível
+                  </span>
+                </div>
 
-                  <div className="lg:col-span-7 grid sm:grid-cols-2 gap-4 bg-slate-50/80 rounded-xl p-6 border border-slate-100 self-center">
-                    <div className="space-y-2">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                        {t.services.forWhomLabel}
-                      </span>
-                      <p className="text-xs text-slate-700 leading-relaxed">
-                        {s.whoIsItFor}
-                      </p>
-                    </div>
+                {/* Treatment Name */}
+                <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-2">
+                  {tr.name}
+                </h3>
 
-                    <div className="space-y-2">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
-                        {t.services.howHelpsLabel}
-                      </span>
-                      <p className="text-xs text-slate-700 leading-relaxed">
-                        {s.howItHelps}
-                      </p>
-                    </div>
+                {/* Short Description */}
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                  {tr.shortDesc}
+                </p>
 
-                    <div className="sm:col-span-2 pt-3 border-t border-slate-200/60 flex items-center justify-between">
-                      <span className="text-[11px] text-slate-500">
-                        {t.services.routineIntegration}
-                      </span>
-                      <button
-                        onClick={onOpenBooking}
-                        className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 group"
-                      >
-                        <span>{t.services.learnMoreBtn}</span>
-                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                      </button>
-                    </div>
-                  </div>
+                {/* Purpose highlight */}
+                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] text-slate-500 mb-4 line-clamp-2">
+                  <span className="font-semibold text-slate-700">Para que serve: </span>
+                  {tr.purpose}
                 </div>
               </div>
-            );
-          })}
+
+              {/* Card Footer: Demo Price & Saiba Mais Button */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-medium">
+                    Estimativa
+                  </span>
+                  <span className="text-xs font-bold text-blue-700">
+                    {tr.demoPrice}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTreatment(tr)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white text-xs font-bold transition-all cursor-pointer"
+                >
+                  <span>Saiba mais</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* View Full Services Page Action */}
-        {onNavigate && (
-          <div className="mt-12 text-center">
-            <button
-              onClick={() => onNavigate('servicos')}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-sm hover:shadow cursor-pointer"
-            >
-              <span>Consultar Todos os Serviços em Detalhe</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
+        {/* Global Notice Box */}
+        <div className="mt-12 p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs max-w-3xl mx-auto flex items-start gap-3 text-left">
+          <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+          <p className="text-xs text-slate-600 leading-relaxed">
+            <strong className="text-slate-800">Nota informativa: </strong>
+            {CLINIC_ATTENDANCE_DATA.priceDisclaimer}
+          </p>
+        </div>
       </div>
+
+      {/* ========================================================= */}
+      {/* MODAL DETALHE DO TRATAMENTO (SAIBA MAIS) */}
+      {/* ========================================================= */}
+      {activeTreatment && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 text-left space-y-4 animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between pb-3 border-b border-slate-100">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                  Procedimento Odontológico
+                </span>
+                <h3 className="text-xl font-black text-slate-900 mt-1">
+                  {activeTreatment.name}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTreatment(null)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                aria-label="Fechar modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Explanation */}
+            <div>
+              <span className="text-xs font-bold text-slate-800 block mb-1">
+                Sobre o procedimento
+              </span>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                {activeTreatment.shortDesc}
+              </p>
+            </div>
+
+            {/* Purpose */}
+            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+              <span className="text-xs font-bold text-blue-700 block mb-1">
+                Para que serve e benefícios:
+              </span>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {activeTreatment.purpose}
+              </p>
+            </div>
+
+            {/* Price & Disclaimer */}
+            <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-1">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-amber-900 font-medium">Valor demonstrativo estimado:</span>
+                <strong className="text-blue-800 font-black">{activeTreatment.demoPrice}</strong>
+              </div>
+              <p className="text-[11px] text-amber-800 leading-relaxed">
+                {CLINIC_ATTENDANCE_DATA.priceDisclaimer}
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTreatment(null);
+                  onOpenBooking();
+                }}
+                className="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-all"
+              >
+                <Calendar className="w-4 h-4" />
+                <span>Agendar avaliação</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openWhatsAppWithTreatment(activeTreatment.name)}
+                className="flex-1 py-3 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all"
+              >
+                <Headset className="w-4 h-4 text-emerald-600" />
+                <span>Tirar dúvidas no WhatsApp</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
