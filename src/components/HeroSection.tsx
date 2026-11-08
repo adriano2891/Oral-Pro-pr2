@@ -129,13 +129,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onOpenC
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
 
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-600/90 text-[11px] font-semibold mb-1 shadow-xs">
+                {/* Badge Azul: Espaço Clínico OralPro posicionado no topo para nunca ser cortado no mobile */}
+                <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 z-10">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600 text-white text-[11px] font-bold shadow-md">
                     <span>Espaço Clínico OralPro</span>
                   </div>
-                  <p className="text-xs text-slate-200">
-                    Av. Paulista, 1578 - São Paulo, SP
-                  </p>
                 </div>
               </div>
 

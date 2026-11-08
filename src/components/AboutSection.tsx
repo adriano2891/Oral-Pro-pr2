@@ -72,13 +72,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onNav
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
 
-              <div className="absolute bottom-5 left-5 right-5 text-white">
-                <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-blue-600 text-[11px] font-bold mb-1 shadow-sm">
+              {/* Badge Azul: Compromisso OralPro posicionado no topo para aparecer por completo no mobile */}
+              <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 z-10">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600 text-white text-[11px] font-bold shadow-md">
                   <span>Compromisso OralPro</span>
                 </div>
-                <h4 className="text-base font-bold text-white drop-shadow-xs">
-                  Saúde bucal integrada com carinho e respeito
-                </h4>
               </div>
             </div>
 
