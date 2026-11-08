@@ -133,9 +133,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onOpenC
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-600/90 text-[11px] font-semibold mb-1 shadow-xs">
                     <span>Espaço Clínico OralPro</span>
                   </div>
-                  <p className="text-sm font-bold text-white drop-shadow-xs">
-                    Ambiente planejado para o seu conforto
-                  </p>
                   <p className="text-xs text-slate-200">
                     Av. Paulista, 1578 - São Paulo, SP
                   </p>

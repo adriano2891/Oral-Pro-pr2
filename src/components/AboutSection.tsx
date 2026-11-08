@@ -79,9 +79,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onNav
                 <h4 className="text-base font-bold text-white drop-shadow-xs">
                   Saúde bucal integrada com carinho e respeito
                 </h4>
-                <p className="text-xs text-slate-200 mt-0.5">
-                  Consultas com tempo dedicado para esclarecer todas as suas dúvidas.
-                </p>
               </div>
             </div>
 
