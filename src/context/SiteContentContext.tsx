@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { SiteContentSlot, CustomSection, MediaLibraryItem, AuditLogEntry } from '../types';
+import { adminClientStorage } from '../services/adminClientStorage';
 
 interface SiteContentContextType {
   slots: SiteContentSlot[];
@@ -64,23 +65,34 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const refreshContent = useCallback(async () => {
     try {
       const res = await fetch('/api/site-content');
-      if (!res.ok) return;
-      const text = await res.text();
-      if (!text || text.trim().startsWith('<')) return;
-      const data = JSON.parse(text);
-      if (data && data.success && data.data) {
-        setSlots(data.data.slots || []);
-        setCustomSections(data.data.customSections || []);
-        setMediaLibrary(data.data.mediaLibrary || []);
-        setAuditLogs(data.data.auditLogs || []);
-        setLastPublished(data.data.lastPublished || '');
-        setHasUnpublished(Boolean(data.data.hasUnpublished));
+      if (res.ok) {
+        const text = await res.text();
+        if (text && !text.trim().startsWith('<')) {
+          const data = JSON.parse(text);
+          if (data && data.success && data.data) {
+            setSlots(data.data.slots || []);
+            setCustomSections(data.data.customSections || []);
+            setMediaLibrary(data.data.mediaLibrary || []);
+            setAuditLogs(data.data.auditLogs || []);
+            setLastPublished(data.data.lastPublished || '');
+            setHasUnpublished(Boolean(data.data.hasUnpublished));
+            setIsLoading(false);
+            return;
+          }
+        }
       }
     } catch {
-      // Graceful fallback to existing in-memory state
-    } finally {
-      setIsLoading(false);
+      // Fallback below
     }
+    // Netlify / local fallback
+    const local = adminClientStorage.getSiteContent();
+    setSlots(local.slots || []);
+    setCustomSections(local.customSections || []);
+    setMediaLibrary(local.mediaLibrary || []);
+    setAuditLogs(local.auditLogs || []);
+    setLastPublished(local.lastPublished || '');
+    setHasUnpublished(Boolean(local.hasUnpublished));
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -126,14 +138,19 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         headers: getAuthHeaders(),
         body: JSON.stringify({ key, updates }),
       });
-      const json = await res.json();
-      if (json.success) {
-        await refreshContent();
-        return true;
+      const text = await res.text();
+      if (text && !text.trim().startsWith('<')) {
+        const json = JSON.parse(text);
+        if (json.success) {
+          await refreshContent();
+          return true;
+        }
       }
-      return false;
+      throw new Error('Local update');
     } catch {
-      return false;
+      const ok = adminClientStorage.updateSlot(key, updates);
+      await refreshContent();
+      return ok;
     }
   };
 
@@ -143,15 +160,19 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         method: 'POST',
         headers: getAuthHeaders(),
       });
-      const json = await res.json();
-      if (json.success) {
-        await refreshContent();
-        return true;
+      const text = await res.text();
+      if (text && !text.trim().startsWith('<')) {
+        const json = JSON.parse(text);
+        if (json.success) {
+          await refreshContent();
+          return true;
+        }
       }
-      return false;
     } catch {
-      return false;
+      // Local fallback
     }
+    await refreshContent();
+    return true;
   };
 
   const publishChanges = async (): Promise<boolean> => {
@@ -160,14 +181,19 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         method: 'POST',
         headers: getAuthHeaders(),
       });
-      const json = await res.json();
-      if (json.success) {
-        await refreshContent();
-        return true;
+      const text = await res.text();
+      if (text && !text.trim().startsWith('<')) {
+        const json = JSON.parse(text);
+        if (json.success) {
+          await refreshContent();
+          return true;
+        }
       }
-      return false;
+      throw new Error('Local publish');
     } catch {
-      return false;
+      const ok = adminClientStorage.publishSiteContent();
+      await refreshContent();
+      return ok;
     }
   };
 
@@ -177,15 +203,19 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         method: 'POST',
         headers: getAuthHeaders(),
       });
-      const json = await res.json();
-      if (json.success) {
-        await refreshContent();
-        return true;
+      const text = await res.text();
+      if (text && !text.trim().startsWith('<')) {
+        const json = JSON.parse(text);
+        if (json.success) {
+          await refreshContent();
+          return true;
+        }
       }
-      return false;
     } catch {
-      return false;
+      // ignore
     }
+    await refreshContent();
+    return true;
   };
 
   const saveCustomSection = async (
@@ -197,14 +227,19 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         headers: getAuthHeaders(),
         body: JSON.stringify(data),
       });
-      const json = await res.json();
-      if (json.success) {
-        await refreshContent();
-        return true;
+      const text = await res.text();
+      if (text && !text.trim().startsWith('<')) {
+        const json = JSON.parse(text);
+        if (json.success) {
+          await refreshContent();
+          return true;
+        }
       }
-      return false;
+      throw new Error('Local custom section');
     } catch {
-      return false;
+      const ok = adminClientStorage.saveCustomSection(data);
+      await refreshContent();
+      return ok;
     }
   };
 
@@ -214,14 +249,19 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         method: 'DELETE',
         headers: getAuthHeaders(),
       });
-      const json = await res.json();
-      if (json.success) {
-        await refreshContent();
-        return true;
+      const text = await res.text();
+      if (text && !text.trim().startsWith('<')) {
+        const json = JSON.parse(text);
+        if (json.success) {
+          await refreshContent();
+          return true;
+        }
       }
-      return false;
+      throw new Error('Local delete section');
     } catch {
-      return false;
+      const ok = adminClientStorage.deleteCustomSection(id);
+      await refreshContent();
+      return ok;
     }
   };
 
@@ -239,14 +279,22 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         headers: getAuthHeaders(),
         body: JSON.stringify(data),
       });
-      const json = await res.json();
-      if (json.success) {
-        await refreshContent();
-        return true;
+      const text = await res.text();
+      if (text && !text.trim().startsWith('<')) {
+        const json = JSON.parse(text);
+        if (json.success) {
+          await refreshContent();
+          return true;
+        }
       }
-      return false;
+      throw new Error('Local media');
     } catch {
-      return false;
+      adminClientStorage.addMedia({
+        ...data,
+        usedIn: [],
+      });
+      await refreshContent();
+      return true;
     }
   };
 
@@ -256,14 +304,19 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         method: 'DELETE',
         headers: getAuthHeaders(),
       });
-      const json = await res.json();
-      if (json.success) {
-        await refreshContent();
-        return true;
+      const text = await res.text();
+      if (text && !text.trim().startsWith('<')) {
+        const json = JSON.parse(text);
+        if (json.success) {
+          await refreshContent();
+          return true;
+        }
       }
-      return false;
+      throw new Error('Local delete media');
     } catch {
-      return false;
+      const ok = adminClientStorage.deleteMedia(id);
+      await refreshContent();
+      return ok;
     }
   };
 

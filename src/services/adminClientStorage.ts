@@ -235,7 +235,7 @@ const DEFAULT_MEDIA: MediaLibraryItem[] = [
     size: '1.4 MB',
     createdAt: '2026-10-01',
     origin: 'Oficial OralPro',
-    usedInSlots: ['about_founder', 'home_about'],
+    usedIn: ['about_founder', 'home_about'],
   },
   {
     id: 'med-lib-2',
@@ -246,7 +246,7 @@ const DEFAULT_MEDIA: MediaLibraryItem[] = [
     size: '2.1 MB',
     createdAt: '2026-10-02',
     origin: 'Oficial OralPro',
-    usedInSlots: ['about_masterclass'],
+    usedIn: ['about_masterclass'],
   },
   {
     id: 'med-lib-3',
@@ -257,7 +257,7 @@ const DEFAULT_MEDIA: MediaLibraryItem[] = [
     size: '1.8 MB',
     createdAt: '2026-10-03',
     origin: 'Oficial OralPro',
-    usedInSlots: ['home_hero'],
+    usedIn: ['home_hero'],
   },
 ];
 
@@ -414,7 +414,7 @@ export const adminClientStorage = {
       ...media,
       id: 'med-' + Date.now(),
       createdAt: new Date().toISOString().split('T')[0],
-      usedInSlots: media.usedInSlots || [],
+      usedIn: media.usedIn || [],
     };
     const current = adminClientStorage.getMedia();
     const updated = [newItem, ...current];
@@ -523,14 +523,13 @@ export const adminClientStorage = {
 
     const fullSection: CustomSection = {
       id,
-      page: section.page || 'home',
+      page: (section.page || 'home') as any,
       sectionName: section.sectionName || 'Nova Secção',
-      badge: section.badge || '',
       title: section.title || '',
-      subtitle: section.subtitle || '',
-      paragraphs: section.paragraphs || [],
+      text: section.text || '',
       images: section.images || [],
-      layout: section.layout || 'grid-2',
+      buttonText: section.buttonText,
+      buttonLink: section.buttonLink,
       status: section.status || 'publicado',
       order: section.order || data.customSections.length + 1,
       createdAt: section.createdAt || new Date().toISOString(),

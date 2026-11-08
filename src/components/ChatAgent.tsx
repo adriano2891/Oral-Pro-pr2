@@ -317,15 +317,12 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({
       {/* ========================================================= */}
       {isOpen && (
         <div
-          className="fixed inset-x-2 bottom-2 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[385px] h-[540px] sm:h-[570px] max-h-[90vh] z-50 bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-200"
-          style={{
-            bottom: 'max(0.5rem, env(safe-area-inset-bottom, 8px))',
-          }}
+          className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 w-full h-[100dvh] sm:w-[385px] sm:h-[570px] sm:max-h-[90vh] z-50 bg-white rounded-none sm:rounded-2xl sm:border border-slate-200 shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-200"
           role="dialog"
           aria-label="Atendimento OralPro"
         >
           {/* Header Superior com Identidade OralPro */}
-          <div className="bg-slate-900 text-white px-3.5 py-3 flex items-center justify-between shadow-xs shrink-0">
+          <div className="bg-slate-900 text-white px-4 py-3 sm:px-3.5 sm:py-3 pt-[max(0.75rem,env(safe-area-inset-top,10px))] flex items-center justify-between shadow-xs shrink-0">
             <div className="flex items-center gap-2">
               <div className="relative shrink-0">
                 <div className="w-8 h-8 rounded-full bg-white p-0.5 flex items-center justify-center ring-2 ring-blue-500/30 shadow-xs">
@@ -1331,7 +1328,7 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({
           {/* ========================================================= */}
           {/* CAMPO DE ENTRADA DE TEXTO (DIGITAR PERGUNTAS) */}
           {/* ========================================================= */}
-          <div className="p-2 sm:p-2.5 bg-white border-t border-slate-200 flex items-center gap-1.5 shrink-0">
+          <div className="p-2.5 sm:p-2.5 pb-[max(0.65rem,env(safe-area-inset-bottom,10px))] bg-white border-t border-slate-200 flex items-center gap-1.5 shrink-0">
             <input
               type="text"
               placeholder="Digite sua dúvida aqui..."
